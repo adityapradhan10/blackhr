@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint . && tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.node.json && tsc --noEmit --project tsconfig.eslint.json",
-    "test": "echo \"No tests configured\""
+    "lint": "eslint . && tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.spec.json && tsc --noEmit --project tsconfig.node.json && tsc --noEmit --project tsconfig.eslint.json",
+    "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.5.2",
@@ -17,8 +17,14 @@
     "vite": "^6.3.5"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "eslint-plugin-react-refresh": "^0.5.2"
+    "@vitest/coverage-v8": "^4.1.7",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.7"
   }
 }

@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
-    "lint": "eslint . && tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.eslint.json",
-    "test": "echo \"No tests configured\""
+    "lint": "eslint . && tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.spec.json && tsc --noEmit --project tsconfig.eslint.json",
+    "test": "jest --config jest.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.3",
@@ -18,8 +18,12 @@
   "devDependencies": {
     "@nestjs/cli": "^11.0.7",
     "@nestjs/schematics": "^11.0.5",
-    "@nestjs/testing": "^11.1.3",
+    "@nestjs/testing": "^11.1.23",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.15.32",
+    "jest": "^30.4.2",
+    "jest-mock-extended": "^4.0.1",
+    "ts-jest": "^29.4.11",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",

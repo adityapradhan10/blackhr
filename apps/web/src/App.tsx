@@ -1,3 +1,1 @@
-export function App() {
-  return <main>BlackHR</main>;
-}
+export function App() {}
