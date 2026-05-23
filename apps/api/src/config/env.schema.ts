@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { plainToInstance, Transform } from 'class-transformer';
-import { IsIn, IsInt, IsString, Max, Min, validateSync } from 'class-validator';
+import { IsIn, IsInt, IsNotEmpty, IsString, Max, Min, validateSync } from 'class-validator';
 
 const nodeEnvironments = ['development', 'test', 'production'] as const;
 
@@ -14,6 +14,7 @@ class EnvironmentVariables {
   PORT = 3001;
 
   @IsString()
+  @IsNotEmpty()
   DATABASE_URL = '';
 
   @IsIn(nodeEnvironments)

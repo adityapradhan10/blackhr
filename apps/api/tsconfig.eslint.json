@@ -8,5 +8,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["eslint.config.ts", "jest.config.ts"]
+  "include": ["eslint.config.ts", "jest.config.ts", "prisma.config.ts"]
 }

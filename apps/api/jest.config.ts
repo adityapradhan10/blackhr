@@ -7,6 +7,7 @@ const config: Config = {
   coverageDirectory: 'coverage',
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
+  setupFiles: ['<rootDir>/test/setup-env.ts'],
   testEnvironment: 'node',
   testRegex: '.*\\.spec\\.ts$',
   transform: {
