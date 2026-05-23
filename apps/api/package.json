@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
-    "lint": "eslint .",
+    "lint": "eslint . && tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.eslint.json",
     "test": "echo \"No tests configured\""
   },
   "dependencies": {

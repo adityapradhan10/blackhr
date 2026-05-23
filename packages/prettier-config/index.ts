@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from 'prettier';
+
+const config: Config = {
   semi: true,
   singleQuote: true,
   trailingComma: 'all',
@@ -6,3 +8,5 @@ module.exports = {
   printWidth: 100,
   arrowParens: 'always',
 };
+
+export default config;

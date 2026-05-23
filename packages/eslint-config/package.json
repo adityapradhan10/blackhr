@@ -2,11 +2,15 @@
   "name": "@blackhr/eslint-config",
   "version": "1.0.0",
   "private": true,
-  "main": "base.js",
+  "type": "module",
+  "main": "base.ts",
   "exports": {
-    ".": "./base.js",
-    "./base": "./base.js",
-    "./react": "./react.js",
-    "./nest": "./nest.js"
+    ".": "./base.ts",
+    "./base": "./base.ts",
+    "./react": "./react.ts",
+    "./nest": "./nest.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit"
   }
 }
