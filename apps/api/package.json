@@ -6,6 +6,7 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "lint": "eslint . && tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.spec.json && tsc --noEmit --project tsconfig.eslint.json",
+    "prisma": "prisma",
     "test": "jest --config jest.config.ts"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "better-sqlite3": "^12.10.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "dotenv": "^17.4.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
@@ -36,6 +38,7 @@
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.22.3",
     "typescript": "^5.8.3"
   }
 }
