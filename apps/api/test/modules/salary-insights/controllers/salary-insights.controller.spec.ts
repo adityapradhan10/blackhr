@@ -50,6 +50,7 @@ describe(SalaryInsightsController.name, () => {
   it('returns dashboard metrics', async () => {
     const service = createService();
     service.dashboardMetrics.mockResolvedValue({
+      departmentDistribution: [],
       highestPayingCountry: 'United States',
       highestPayingRole: 'Senior Software Engineer',
       medianSalary: 85000,
@@ -59,6 +60,7 @@ describe(SalaryInsightsController.name, () => {
     const controller = new SalaryInsightsController(service);
 
     await expect(controller.dashboardMetrics()).resolves.toEqual({
+      departmentDistribution: [],
       highestPayingCountry: 'United States',
       highestPayingRole: 'Senior Software Engineer',
       medianSalary: 85000,

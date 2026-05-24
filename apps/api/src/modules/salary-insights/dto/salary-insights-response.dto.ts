@@ -54,4 +54,7 @@ export class DashboardSalaryInsightsResponseDto implements DashboardMetrics {
 
   @ApiProperty({ isArray: true, type: SalaryDistributionBucketDto })
   salaryDistribution!: SalaryDistributionBucketDto[];
+
+  @ApiProperty({ isArray: true, type: SalaryDistributionBucketDto })
+  departmentDistribution!: SalaryDistributionBucketDto[];
 }

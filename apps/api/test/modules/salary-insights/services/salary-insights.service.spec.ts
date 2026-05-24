@@ -122,6 +122,7 @@ describe(SalaryInsightsService.name, () => {
     it('returns total employees', async () => {
       const repository = createRepository();
       repository.findDashboardMetrics.mockResolvedValue({
+        departmentDistribution: [],
         highestPayingCountry: 'United States',
         highestPayingRole: 'Senior Software Engineer',
         medianSalary: 85000,
@@ -148,6 +149,7 @@ describe(SalaryInsightsService.name, () => {
         highestPayingCountry: 'United States',
         highestPayingRole: 'Senior Software Engineer',
         medianSalary: 85000,
+        departmentDistribution: [],
         salaryDistribution: [],
         totalEmployees: 10,
       });
@@ -164,6 +166,7 @@ describe(SalaryInsightsService.name, () => {
         highestPayingCountry: 'United States',
         highestPayingRole: 'Senior Software Engineer',
         medianSalary: 85000,
+        departmentDistribution: [],
         salaryDistribution: [],
         totalEmployees: 10,
       });
@@ -180,6 +183,7 @@ describe(SalaryInsightsService.name, () => {
         highestPayingCountry: 'United States',
         highestPayingRole: 'Senior Software Engineer',
         medianSalary: 85000,
+        departmentDistribution: [],
         salaryDistribution: [],
         totalEmployees: 10,
       });

@@ -181,6 +181,23 @@ export class SalaryInsightsRepository implements SalaryInsightsRepositoryPort {
     }));
   }
 
+  private async findDepartmentDistribution(): Promise<SalaryDistributionBucket[]> {
+    const rows = await this.prisma.employee.groupBy({
+      _count: { _all: true },
+      by: ['department'],
+      orderBy: {
+        _count: {
+          department: 'desc',
+        },
+      },
+    });
+
+    return rows.map((row) => ({
+      count: row._count._all,
+      label: row.department,
+    }));
+  }
+
   private buildBucketLabel(bucket: number): string {
     const start = bucket * 50_000;
     const end = start + 49_999;
