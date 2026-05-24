@@ -1,30 +1,22 @@
+import {
+  COUNTRY_OPTIONS,
+  DEPARTMENT_OPTIONS,
+  EMPLOYMENT_TYPES,
+  JOB_TITLE_OPTIONS,
+  type Department,
+  type JobTitle,
+} from '@blackhr/shared-types';
+
 export const SEED_EMPLOYEE_COUNT = 10_000;
 export const BATCH_SIZE = 1_000;
 export const FAKER_SEED = 20260523;
 
-export const COUNTRIES = [
-  'India',
-  'United States',
-  'Germany',
-  'Canada',
-  'United Kingdom',
-  'Australia',
-] as const;
+export const COUNTRIES = COUNTRY_OPTIONS;
+export const DEPARTMENTS = DEPARTMENT_OPTIONS;
+export const JOB_TITLES = JOB_TITLE_OPTIONS;
 
-export const DEPARTMENTS = ['Engineering', 'Product', 'HR', 'Finance', 'Sales'] as const;
-
-export const JOB_TITLES = [
-  'Software Engineer',
-  'Senior Software Engineer',
-  'Product Manager',
-  'HR Specialist',
-  'Finance Analyst',
-] as const;
-
-export const EMPLOYMENT_TYPES = ['FULL_TIME', 'PART_TIME', 'CONTRACT'] as const;
-
-export type Department = (typeof DEPARTMENTS)[number];
-export type JobTitle = (typeof JOB_TITLES)[number];
+export { EMPLOYMENT_TYPES };
+export type { Department, JobTitle };
 
 export type SalaryRange = {
   min: number;
