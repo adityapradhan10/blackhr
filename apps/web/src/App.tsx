@@ -1,12 +1,12 @@
 import { BrowserRouter } from 'react-router-dom';
-import { AppLayout } from './shared/layouts/AppLayout';
+import { AppRoutes } from './routes';
 import { QueryProvider } from './shared/providers/QueryProvider';
 
 export function App() {
   return (
     <QueryProvider>
       <BrowserRouter>
-        <AppLayout />
+        <AppRoutes />
       </BrowserRouter>
     </QueryProvider>
   );

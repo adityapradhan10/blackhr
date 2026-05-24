@@ -282,12 +282,12 @@ describe('EmployeesPage', () => {
 
     await user.type(within(form).getByLabelText(/full name/i), createInput.fullName);
     await user.type(within(form).getByLabelText(/^email$/i), createInput.email);
-    await user.type(within(form).getByLabelText(/department/i), createInput.department ?? '');
-    await user.type(within(form).getByLabelText(/country/i), createInput.country);
-    await user.type(within(form).getByLabelText(/job title/i), createInput.jobTitle);
+    await selectFilterOption(user, 'form-department', createInput.department ?? 'Engineering');
+    await selectFilterOption(user, 'form-country', createInput.country);
+    await selectFilterOption(user, 'form-job-title', createInput.jobTitle);
     await user.clear(within(form).getByLabelText(/salary/i));
     await user.type(within(form).getByLabelText(/salary/i), String(createInput.salary));
-    await user.selectOptions(within(form).getByTitle('select-hidden'), createInput.employmentType ?? 'FULL_TIME');
+    await selectFilterOption(user, 'form-employment-type', 'Full Time');
     await user.type(within(form).getByLabelText(/joining date/i), '2024-02-01');
     await user.click(within(form).getByRole('button', { name: /save employee/i }));
 
@@ -316,7 +316,7 @@ describe('EmployeesPage', () => {
     await user.type(within(form).getByLabelText(/full name/i), 'Aarav Sharma Updated');
     await user.clear(within(form).getByLabelText(/salary/i));
     await user.type(within(form).getByLabelText(/salary/i), '130000');
-    await user.click(within(form).getByRole('button', { name: /save employee/i }));
+    await user.click(within(form).getByRole('button', { name: /save changes/i }));
 
     expect(await screen.findByText(/employee updated successfully/i)).toBeInTheDocument();
   });
