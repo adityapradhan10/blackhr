@@ -12,6 +12,8 @@ data/
 .env
 .env.*
 !.env.example
+.playwright
+.playwright-cli
 
 # Personal reference — not for the repo
 docs/reference.md
