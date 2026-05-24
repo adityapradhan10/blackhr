@@ -12,3 +12,6 @@ data/
 .env
 .env.*
 !.env.example
+
+# Personal reference — not for the repo
+docs/reference.md
