@@ -356,4 +356,40 @@ describe('EmployeesPage', () => {
 
     expect(await screen.findByRole('button', { name: /deleting/i })).toBeDisabled();
   });
+
+  it('navigates between pages when pagination controls are used', async () => {
+    const user = userEvent.setup();
+    const adapter = mockEmployeeApi({
+      list: (config) => {
+        const page = config.params?.page as number;
+
+        if (page === 2) {
+          return createListResponse(
+            [
+              {
+                ...sampleEmployee,
+                employeeId: 'BHR-00002',
+                fullName: 'Priya Verma',
+                id: 'employee-2',
+              },
+            ],
+            { page: 2, totalPages: 2 },
+          );
+        }
+
+        return createListResponse([sampleEmployee], { page: 1, totalPages: 2 });
+      },
+    });
+
+    renderEmployeesPage();
+
+    await screen.findByText('Aarav Sharma');
+    expect(screen.getByText('Page 1 of 2')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /next/i }));
+
+    expect(await screen.findByText('Priya Verma')).toBeInTheDocument();
+    expect(screen.getByText('Page 2 of 2')).toBeInTheDocument();
+    expect(adapter).toHaveBeenCalled();
+  });
 });
