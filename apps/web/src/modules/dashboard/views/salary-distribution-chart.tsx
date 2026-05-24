@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { DepartmentDistributionBucket } from '@blackhr/shared-types';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { getChartColor } from '../../../shared/constants/chart-palette';
@@ -13,11 +14,18 @@ type SalaryDistributionChartProps = {
 const countFormatter = (value: number) => value.toLocaleString('en-US');
 
 export function SalaryDistributionChart({ data, isEmpty, isLoading }: SalaryDistributionChartProps) {
-  const totalEmployees = data.reduce((sum, bucket) => sum + bucket.count, 0);
-  const legendItems = data.map((bucket, index) => ({
-    color: getChartColor(index),
-    label: bucket.label,
-  }));
+  const totalEmployees = useMemo(
+    () => data.reduce((sum, bucket) => sum + bucket.count, 0),
+    [data],
+  );
+  const legendItems = useMemo(
+    () =>
+      data.map((bucket, index) => ({
+        color: getChartColor(index),
+        label: bucket.label,
+      })),
+    [data],
+  );
 
   return (
     <PanelCard data-testid="department-distribution-chart">

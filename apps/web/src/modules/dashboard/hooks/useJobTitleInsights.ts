@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { salaryInsightApi } from '../models/salary-insight.api';
+import { JOB_TITLE_INSIGHTS_QUERY_KEY } from './query-keys';
 
-export const JOB_TITLE_INSIGHTS_QUERY_KEY = 'jobTitleInsights';
+export { JOB_TITLE_INSIGHTS_QUERY_KEY } from './query-keys';
 
 export function useJobTitleInsights(country: string, jobTitle: string) {
   return useQuery({

@@ -1,6 +1,6 @@
 import { Select, SelectItem, TextInput } from '@tremor/react';
 import { PanelCard } from '../../../shared/ui/panel-card';
-import type { EmployeeFilters } from '../controllers/useEmployeesPageController';
+import type { EmployeeFilters } from '../types';
 import { FILTER_COUNTRY_OPTIONS, FILTER_DEPARTMENT_OPTIONS, FILTER_JOB_TITLE_OPTIONS } from '../types';
 
 type EmployeeFiltersProps = {

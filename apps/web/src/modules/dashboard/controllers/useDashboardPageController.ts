@@ -1,31 +1,19 @@
-import { useQueries } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { COUNTRY_INSIGHTS_QUERY_KEY, useCountryInsights } from '../hooks/useCountryInsights';
+import { COUNTRY_OPTIONS, JOB_TITLE_OPTIONS } from '../../../shared/constants/workforce-options';
+import { useCountryComparisonInsights } from '../hooks/useCountryComparisonInsights';
+import { useCountryInsights } from '../hooks/useCountryInsights';
 import { useDashboardMetrics } from '../hooks/useDashboardMetrics';
 import { useJobTitleInsights } from '../hooks/useJobTitleInsights';
-import { salaryInsightApi } from '../models/salary-insight.api';
-import {
-  DASHBOARD_COUNTRY_OPTIONS,
-  DASHBOARD_JOB_TITLE_OPTIONS,
-  formatCount,
-  formatCurrency,
-  formatLabel,
-} from '../types';
+import { formatCount, formatCurrency, formatLabel } from '../../../shared/utils/formatters';
 
 export function useDashboardPageController() {
-  const [selectedCountry, setSelectedCountry] = useState<string>(DASHBOARD_COUNTRY_OPTIONS[0]);
-  const [selectedJobTitle, setSelectedJobTitle] = useState<string>(DASHBOARD_JOB_TITLE_OPTIONS[0]);
+  const [selectedCountry, setSelectedCountry] = useState<string>(COUNTRY_OPTIONS[0]);
+  const [selectedJobTitle, setSelectedJobTitle] = useState<string>(JOB_TITLE_OPTIONS[0]);
 
   const dashboardQuery = useDashboardMetrics();
   const countryInsightQuery = useCountryInsights(selectedCountry);
   const jobTitleInsightQuery = useJobTitleInsights(selectedCountry, selectedJobTitle);
-
-  const countryComparisonQueries = useQueries({
-    queries: DASHBOARD_COUNTRY_OPTIONS.map((country) => ({
-      queryFn: () => salaryInsightApi.getCountrySalaryInsights(country),
-      queryKey: [COUNTRY_INSIGHTS_QUERY_KEY, 'comparison', country],
-    })),
-  });
+  const countryComparisonQueries = useCountryComparisonInsights(COUNTRY_OPTIONS);
 
   const countryChartData = useMemo(
     () =>
@@ -37,7 +25,7 @@ export function useDashboardPageController() {
         return [
           {
             averageSalary: query.data.averageSalary,
-            country: DASHBOARD_COUNTRY_OPTIONS[index],
+            country: COUNTRY_OPTIONS[index],
           },
         ];
       }),
@@ -52,7 +40,7 @@ export function useDashboardPageController() {
   return {
     countryChartData,
     countryInsight: countryInsightQuery.data,
-    countryOptions: DASHBOARD_COUNTRY_OPTIONS,
+    countryOptions: COUNTRY_OPTIONS,
     departmentDistribution: dashboardData?.departmentDistribution ?? [],
     display: {
       highestPayingCountry: formatLabel(dashboardData?.highestPayingCountry),
@@ -71,7 +59,7 @@ export function useDashboardPageController() {
     isLoading: dashboardQuery.isLoading,
     isSalaryDistributionEmpty: (dashboardData?.salaryDistribution.length ?? 0) === 0,
     jobTitleInsight: jobTitleInsightQuery.data,
-    jobTitleOptions: DASHBOARD_JOB_TITLE_OPTIONS,
+    jobTitleOptions: JOB_TITLE_OPTIONS,
     salaryDistribution: dashboardData?.salaryDistribution ?? [],
     selectedCountry,
     selectedJobTitle,

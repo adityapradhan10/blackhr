@@ -1,9 +1,9 @@
 import { Grid } from '@tremor/react';
-import type { DashboardPageController } from '../controllers/useDashboardPageController';
+import type { DashboardDisplay } from '../types';
 import { PanelCard } from '../../../shared/ui/panel-card';
 
 type DashboardKpisProps = {
-  display: DashboardPageController['display'];
+  display: DashboardDisplay;
   isLoading: boolean;
 };
 

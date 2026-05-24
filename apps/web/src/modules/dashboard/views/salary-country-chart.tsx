@@ -10,7 +10,9 @@ import {
 } from 'recharts';
 import { getChartColor } from '../../../shared/constants/chart-palette';
 import { ChartEmptyState, ChartTooltip } from '../../../shared/ui/chart-primitives';
+import { LoadingMessage } from '../../../shared/ui/loading-message';
 import { PanelCard } from '../../../shared/ui/panel-card';
+import { formatCurrency } from '../../../shared/utils/formatters';
 
 type SalaryCountryChartProps = {
   data: Array<{ averageSalary: number; country: string }>;
@@ -19,12 +21,7 @@ type SalaryCountryChartProps = {
   isLoading: boolean;
 };
 
-const currencyFormatter = (value: number) =>
-  new Intl.NumberFormat('en-US', {
-    currency: 'USD',
-    maximumFractionDigits: 0,
-    style: 'currency',
-  }).format(value);
+const currencyFormatter = (value: number) => formatCurrency(value);
 
 export function SalaryCountryChart({ data, isEmpty, isError, isLoading }: SalaryCountryChartProps) {
   return (
@@ -35,9 +32,7 @@ export function SalaryCountryChart({ data, isEmpty, isError, isLoading }: Salary
       </div>
 
       {isLoading ? (
-        <p className="mt-6 text-sm text-slate-500" role="status">
-          Loading country chart...
-        </p>
+        <LoadingMessage className="mt-6">Loading country chart...</LoadingMessage>
       ) : null}
 
       {isError ? (

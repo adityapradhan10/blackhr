@@ -1,5 +1,7 @@
 import type { DashboardPageController } from '../controllers/useDashboardPageController';
 import { useDashboardPageController } from '../controllers/useDashboardPageController';
+import { AlertBanner } from '../../../shared/ui/alert-banner';
+import { LoadingMessage } from '../../../shared/ui/loading-message';
 import { PageHeader } from '../../../shared/ui/page-header';
 import { CountryInsightCard } from './country-insight-card';
 import { DashboardKpis } from './dashboard-kpis';
@@ -63,9 +65,7 @@ export function DashboardPage() {
           description="Organization-wide salary metrics and workforce insights"
           title="Dashboard"
         />
-        <p aria-label="Loading dashboard" className="text-sm text-slate-500" role="status">
-          Loading dashboard...
-        </p>
+        <LoadingMessage aria-label="Loading dashboard">Loading dashboard...</LoadingMessage>
       </section>
     );
   }
@@ -77,9 +77,7 @@ export function DashboardPage() {
           description="Organization-wide salary metrics and workforce insights"
           title="Dashboard"
         />
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
-          Unable to load dashboard metrics. Please try again.
-        </p>
+        <AlertBanner>Unable to load dashboard metrics. Please try again.</AlertBanner>
       </section>
     );
   }

@@ -1,31 +1,24 @@
-import type { EmployeeSortBy } from '@blackhr/shared-types';
+import type { EmployeeResponse, EmployeeSortBy } from '@blackhr/shared-types';
 import { Badge, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '@tremor/react';
 import { PanelCard } from '../../../shared/ui/panel-card';
-import type { EmployeeTableRow } from '../controllers/useEmployeesPageController';
+import { LoadingMessage } from '../../../shared/ui/loading-message';
+import { formatCurrency } from '../../../shared/utils/formatters';
 
 type EmployeeTableProps = {
-  employees: EmployeeTableRow[];
+  employees: EmployeeResponse[];
   isLoading: boolean;
-  onDelete?: (employee: EmployeeTableRow) => void;
-  onEdit?: (employee: EmployeeTableRow) => void;
+  onDelete?: (employee: EmployeeResponse) => void;
+  onEdit?: (employee: EmployeeResponse) => void;
   onSort?: (column: EmployeeSortBy) => void;
   sortBy?: EmployeeSortBy;
   sortOrder?: 'asc' | 'desc';
 };
 
-const EMPLOYMENT_TYPE_LABELS: Record<EmployeeTableRow['employmentType'], string> = {
+const EMPLOYMENT_TYPE_LABELS: Record<EmployeeResponse['employmentType'], string> = {
   CONTRACT: 'Contract',
   FULL_TIME: 'Full Time',
   PART_TIME: 'Part Time',
 };
-
-function formatSalary(salary: number, currency: string) {
-  return new Intl.NumberFormat(undefined, {
-    currency,
-    maximumFractionDigits: 0,
-    style: 'currency',
-  }).format(salary);
-}
 
 function SortIcon({ active, order }: { active: boolean; order?: 'asc' | 'desc' }) {
   const inactiveClass = active
@@ -95,9 +88,7 @@ export function EmployeeTable({
   if (isLoading) {
     return (
       <PanelCard>
-        <p aria-label="Loading employees" className="text-sm text-slate-500" role="status">
-          Loading employees...
-        </p>
+        <LoadingMessage aria-label="Loading employees">Loading employees...</LoadingMessage>
       </PanelCard>
     );
   }
@@ -143,7 +134,7 @@ export function EmployeeTable({
               <TableCell>{employee.department}</TableCell>
               <TableCell>{employee.country}</TableCell>
               <TableCell>{employee.jobTitle}</TableCell>
-              <TableCell>{formatSalary(employee.salary, employee.currency)}</TableCell>
+              <TableCell>{formatCurrency(employee.salary, employee.currency)}</TableCell>
               <TableCell>
                 <Badge color="blue">{EMPLOYMENT_TYPE_LABELS[employee.employmentType]}</Badge>
               </TableCell>

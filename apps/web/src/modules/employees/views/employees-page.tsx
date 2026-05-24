@@ -1,6 +1,7 @@
 import { Button } from '@tremor/react';
 import { useEmployeeFormController } from '../controllers/useEmployeeFormController';
 import { useEmployeesPageController } from '../controllers/useEmployeesPageController';
+import { AlertBanner } from '../../../shared/ui/alert-banner';
 import { PageHeader } from '../../../shared/ui/page-header';
 import { EmployeeDeleteDialog } from './employee-delete-dialog';
 import { EmployeeFiltersPanel } from './employee-filters';
@@ -19,9 +20,7 @@ export function EmployeesPage() {
     return (
       <section>
         <PageHeader description="Manage employee records, compensation, and employment details" title="Employees" />
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
-          Unable to load employees. Please try again.
-        </p>
+        <AlertBanner>Unable to load employees. Please try again.</AlertBanner>
       </section>
     );
   }

@@ -2,27 +2,16 @@ import type { EmployeeQuery, EmployeeResponse, EmployeeSortBy, EmployeeSortOrder
 import { useEffect, useMemo, useState } from 'react';
 import { useDeleteEmployee } from '../hooks/useDeleteEmployee';
 import { useEmployees } from '../hooks/useEmployees';
+import { EMPTY_EMPLOYEE_FILTERS, type EmployeeFilters } from '../types';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
 const SEARCH_DEBOUNCE_MS = 300;
 
-export type EmployeeFilters = {
-  country: string;
-  department: string;
-  jobTitle: string;
-};
-
-const EMPTY_FILTERS: EmployeeFilters = {
-  country: '',
-  department: '',
-  jobTitle: '',
-};
-
 export function useEmployeesPageController() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [filters, setFilters] = useState<EmployeeFilters>(EMPTY_FILTERS);
+  const [filters, setFilters] = useState<EmployeeFilters>(EMPTY_EMPLOYEE_FILTERS);
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [sortBy, setSortBy] = useState<EmployeeSortBy | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState<EmployeeSortOrder>('asc');
@@ -162,5 +151,3 @@ export function useEmployeesPageController() {
 }
 
 export type EmployeesPageController = ReturnType<typeof useEmployeesPageController>;
-
-export type EmployeeTableRow = EmployeeResponse;

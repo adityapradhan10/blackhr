@@ -1,8 +1,9 @@
 import type { EmployeeQuery } from '@blackhr/shared-types';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../models/employee.api';
+import { EMPLOYEES_QUERY_KEY } from './query-keys';
 
-export const EMPLOYEES_QUERY_KEY = 'employees';
+export { EMPLOYEES_QUERY_KEY } from './query-keys';
 
 export function useEmployees(query: EmployeeQuery) {
   return useQuery({

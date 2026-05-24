@@ -1,7 +1,7 @@
 import type { AxiosAdapter } from 'axios';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { EMPLOYEES_QUERY_KEY } from '../../../../../src/modules/employees/hooks/useEmployees';
+import { EMPLOYEES_QUERY_KEY } from '../../../../../src/modules/employees/hooks/query-keys';
 import { useCreateEmployee } from '../../../../../src/modules/employees/hooks/useCreateEmployee';
 import { useDeleteEmployee } from '../../../../../src/modules/employees/hooks/useDeleteEmployee';
 import { useEmployees } from '../../../../../src/modules/employees/hooks/useEmployees';

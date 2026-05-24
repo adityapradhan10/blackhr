@@ -1,5 +1,34 @@
 import type { EmploymentType } from '@blackhr/shared-types';
 import { z } from 'zod/v4';
+import {
+  FILTER_COUNTRY_OPTIONS,
+  FILTER_DEPARTMENT_OPTIONS,
+  FILTER_JOB_TITLE_OPTIONS,
+  FORM_COUNTRY_OPTIONS,
+  FORM_DEPARTMENT_OPTIONS,
+  FORM_JOB_TITLE_OPTIONS,
+} from '../../../shared/constants/workforce-options';
+
+export {
+  FILTER_COUNTRY_OPTIONS,
+  FILTER_DEPARTMENT_OPTIONS,
+  FILTER_JOB_TITLE_OPTIONS,
+  FORM_COUNTRY_OPTIONS,
+  FORM_DEPARTMENT_OPTIONS,
+  FORM_JOB_TITLE_OPTIONS,
+};
+
+export type EmployeeFilters = {
+  country: string;
+  department: string;
+  jobTitle: string;
+};
+
+export const EMPTY_EMPLOYEE_FILTERS: EmployeeFilters = {
+  country: '',
+  department: '',
+  jobTitle: '',
+};
 
 export const EMPLOYMENT_TYPE_OPTIONS: Array<{ label: string; value: EmploymentType }> = [
   { label: 'Full Time', value: 'FULL_TIME' },
@@ -19,24 +48,3 @@ export const employeeFormSchema = z.object({
 });
 
 export type EmployeeFormValues = z.output<typeof employeeFormSchema>;
-
-export const FILTER_COUNTRY_OPTIONS = ['', 'India', 'United States', 'United Kingdom', 'Germany', 'Canada'] as const;
-export const FILTER_DEPARTMENT_OPTIONS = ['', 'Engineering', 'Product', 'Design', 'Sales', 'HR', 'Finance'] as const;
-export const FILTER_JOB_TITLE_OPTIONS = [
-  '',
-  'Software Engineer',
-  'Product Manager',
-  'Designer',
-  'Sales Executive',
-  'HR Manager',
-] as const;
-
-export const FORM_COUNTRY_OPTIONS = FILTER_COUNTRY_OPTIONS.filter(
-  (value): value is Exclude<(typeof FILTER_COUNTRY_OPTIONS)[number], ''> => value !== '',
-);
-export const FORM_DEPARTMENT_OPTIONS = FILTER_DEPARTMENT_OPTIONS.filter(
-  (value): value is Exclude<(typeof FILTER_DEPARTMENT_OPTIONS)[number], ''> => value !== '',
-);
-export const FORM_JOB_TITLE_OPTIONS = FILTER_JOB_TITLE_OPTIONS.filter(
-  (value): value is Exclude<(typeof FILTER_JOB_TITLE_OPTIONS)[number], ''> => value !== '',
-);
