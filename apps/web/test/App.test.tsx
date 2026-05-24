@@ -11,16 +11,17 @@ afterEach(() => {
 });
 
 describe(App.name, () => {
-  it('renders the application shell without placeholder pages', () => {
+  it('redirects the root route to the dashboard page', async () => {
     window.history.pushState({}, '', '/');
 
     render(<App />);
 
-    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
-    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /employees/i })).toBeInTheDocument();
   });
 
-  it('does not fetch application data before feature pages exist', () => {
+  it('does not fetch application data on the dashboard page', () => {
     const adapter = vi.fn<AxiosAdapter>(async (config): Promise<AxiosResponse> => {
       return {
         config,
@@ -32,6 +33,7 @@ describe(App.name, () => {
     });
     api.defaults.adapter = adapter;
 
+    window.history.pushState({}, '', '/dashboard');
     render(<App />);
 
     expect(adapter).not.toHaveBeenCalled();

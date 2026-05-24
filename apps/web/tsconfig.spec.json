@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noEmit": true,
-    "types": ["@testing-library/jest-dom", "vitest"]
+    "jsx": "react-jsx",
+    "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "test/**/*.tsx"]
+  "include": ["src/vite-env.d.ts", "test/env.d.ts", "test/**/*.ts", "test/**/*.tsx"]
 }
