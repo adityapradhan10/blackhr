@@ -18,8 +18,10 @@ How BlackHR generates 10,000 employees deterministically and efficiently.
 ## File layout
 
 ```txt
+packages/shared-types/src/index.ts   # API shapes, workforce constants, sort enums
+
 apps/api/prisma/seed/
-├── constants.ts              # SEED_EMPLOYEE_COUNT, BATCH_SIZE, domains
+├── constants.ts              # Imports domain lists from shared-types; seed-only salary maps
 ├── employee-generator.ts     # Deterministic row builder
 └── seed.ts                   # Orchestration (delete + batched insert)
 
@@ -89,7 +91,7 @@ Each employee index produces:
 | `email` | Derived from name + employee number — unique per index |
 | `employeeId` | Sequential `BHR-00001`, `BHR-00002`, … |
 | `salary` | Seeded PRNG from index |
-| `country`, `jobTitle`, `department` | Modulo rotation over constants |
+| `country`, `jobTitle`, `department` | Modulo rotation over `@blackhr/shared-types` workforce constants |
 
 ### Why not Faker-only random?
 
@@ -98,6 +100,10 @@ Each employee index produces:
 - Demos and screenshots show different data each run
 
 Static name files + seeded PRNG give "realistic enough" data with guaranteed reproducibility.
+
+### Domain lists
+
+Countries, departments, job titles, and employment types are **not** defined in the seed folder. They are imported from `packages/shared-types/src/index.ts` so seeded data always matches dashboard dropdowns and employee forms. Seed-only maps (`SALARY_RANGES`, `JOB_TITLE_DEPARTMENTS`) remain in `apps/api/prisma/seed/constants.ts`.
 
 ---
 

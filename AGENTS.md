@@ -47,6 +47,20 @@ Language:
 
 ---
 
+## Shared Domain Constants
+
+Workforce reference data (countries, departments, job titles, employment types) and employee list sort enums live in `@blackhr/shared-types`:
+
+- `packages/shared-types/src/index.ts` — workforce constants and sort enums (single entry file for Node ESM compatibility)
+
+Rules:
+
+- Do **not** duplicate these lists in the web app or API seed — import from shared-types.
+- Web may add UI-only wrappers (e.g. filter dropdown empty “All” option) in `apps/web/src/shared/constants/workforce-options.ts`.
+- Seed-only config (salary ranges, job-title→department maps, batch sizes) stays in `apps/api/prisma/seed/constants.ts`.
+
+---
+
 ## Employee Domain
 
 Employee fields:

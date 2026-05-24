@@ -184,14 +184,16 @@ All widgets should support:
 Controller owns:
 
 ```ts
-selectedCountry
-
+selectedCountry              // Country Salary Insights panel
+selectedJobTitleCountry      // Job Title Salary Insights panel (independent)
 selectedJobTitle
 
 dashboard data
 
 display-ready values
 ```
+
+Country and job-title insight panels each have their own country selection state so changing one does not affect the other.
 
 Views should remain declarative.
 

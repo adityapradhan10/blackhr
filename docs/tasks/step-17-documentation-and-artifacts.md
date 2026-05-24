@@ -86,7 +86,7 @@ Model
 API
 ```
 
-✓ shared contracts
+✓ shared contracts and domain constants (`@blackhr/shared-types`)
 
 ---
 

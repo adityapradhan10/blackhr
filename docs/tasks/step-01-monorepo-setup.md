@@ -223,11 +223,19 @@ Content:
 ```json
 {
   "name": "@blackhr/shared-types",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  }
 }
 ```
 
-No DTOs yet.
+Exports both TypeScript types **and** runtime constants (workforce options, sort enums). No Nest DTOs in this package.
 
 ---
 

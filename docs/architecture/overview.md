@@ -8,7 +8,7 @@ blackhr/
 │   ├── api/          # NestJS backend (@blackhr/api)
 │   └── web/          # React + Vite frontend (@blackhr/web)
 ├── packages/
-│   ├── shared-types/ # API contract types (FE + BE)
+│   ├── shared-types/ # API contract + shared domain constants (FE + BE)
 │   ├── eslint-config/
 │   ├── prettier-config/
 │   └── ts-config/
@@ -100,17 +100,21 @@ See [frontend-architecture.md](./frontend-architecture.md) for dependency rules 
 
 ## Shared contracts
 
-`packages/shared-types/src/index.ts` defines the cross-boundary API contract:
+`@blackhr/shared-types` is the cross-boundary source of truth:
 
-- Domain: `Employee`, `EmploymentType`
-- Requests: `CreateEmployeeRequest`, `EmployeeQuery`
-- Responses: `PaginatedResponse<T>`, `DashboardMetrics`, insight types
+| File | Purpose |
+|---|---|
+| `src/index.ts` | API shapes, workforce reference data, and list query enums |
 
-Both apps import via `"@blackhr/shared-types": "workspace:^"`.
+Both apps import via `"@blackhr/shared-types": "workspace:^"`. The package exports **runtime constants** (not types-only) so the web dropdowns, API seed, and DTO `@IsIn` validation cannot drift.
 
-### Why types only, not DTOs?
+**Web:** `apps/web/src/shared/constants/workforce-options.ts` re-exports shared workforce constants and adds UI-only `FILTER_*` / `FORM_*` wrappers.
 
-Backend DTOs carry Nest decorators (`@IsEmail`, `@ApiProperty`, `@Type(() => Date)`). The frontend should not depend on backend framework code. Frontend form validation uses **Zod** separately.
+**Seed:** `apps/api/prisma/seed/constants.ts` imports domain lists from shared-types; seed-only salary ranges and job-title→department maps stay local.
+
+### Why not share Nest DTOs with the frontend?
+
+Backend DTOs carry Nest decorators (`@IsEmail`, `@ApiProperty`, `@Type(() => Date)`). The frontend should not depend on backend framework code. Frontend form validation uses **Zod**, deriving enums from shared constants where possible.
 
 ### Why not share Prisma models?
 

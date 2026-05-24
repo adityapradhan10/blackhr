@@ -81,11 +81,13 @@ Expected response:
 
 ### Reference data (dropdown options)
 
-**Countries:** India, United States, United Kingdom, Germany, Canada
+Source of truth: `packages/shared-types/src/index.ts` (re-exported in the web app via `apps/web/src/shared/constants/workforce-options.ts`).
 
-**Departments:** Engineering, Product, Design, Sales, HR, Finance
+**Countries:** India, United States, Germany, Canada, United Kingdom, Australia
 
-**Job titles:** Software Engineer, Product Manager, Designer, Sales Executive, HR Manager
+**Departments:** Engineering, Product, HR, Finance, Sales
+
+**Job titles:** Software Engineer, Senior Software Engineer, Product Manager, HR Specialist, Finance Analyst
 
 **Employment types:** Full Time, Part Time, Contract
 
@@ -399,7 +401,7 @@ Expected response:
 
 **Steps:**
 
-For each country in the dropdown — **India**, **United States**, **United Kingdom**, **Germany**, **Canada**:
+For each country in the dropdown — **India**, **United States**, **Germany**, **Canada**, **United Kingdom**, **Australia**:
 
 1. Select the country.
 2. Wait for loading to finish.
@@ -489,14 +491,32 @@ For each country in the dropdown — **India**, **United States**, **United King
 With country set to **India**, select each job title:
 
 - Software Engineer
+- Senior Software Engineer
 - Product Manager
-- Designer
-- Sales Executive
-- HR Manager
+- HR Specialist
+- Finance Analyst
 
 **Expected (per title):**
 
 - [ ] Average salary loads and displays as currency
+
+---
+
+## TC-UI-035 — Country selections are independent between insight panels
+
+**Priority:** P1
+
+**Steps:**
+
+1. In **Country Salary Insights**, set country to **United States**.
+2. In **Job Title Salary Insights**, confirm country is still **India** (default).
+3. Change job-title panel country to **Germany**.
+4. Confirm **Country Salary Insights** still shows **United States**.
+
+**Expected:**
+
+- [ ] Each panel keeps its own country selection
+- [ ] Changing one panel does not change the other
 
 ---
 
@@ -1184,7 +1204,7 @@ For each country (use unique emails per run):
 
 **Expected:**
 
-- [ ] Employee created successfully for India, United States, United Kingdom, Germany, and Canada
+- [ ] Employee created successfully for India, United States, Germany, Canada, United Kingdom, and Australia
 
 ---
 
@@ -1537,6 +1557,7 @@ pnpm dev
 | TC-UI-032 | Change job title              | P0       |
 | TC-UI-033 | Change country in job insight | P0       |
 | TC-UI-034 | All job title options         | P1       |
+| TC-UI-035 | Independent insight countries | P1       |
 | TC-UI-040 | Country bar chart             | P0       |
 | TC-UI-041 | Country chart tooltip         | P2       |
 | TC-UI-042 | Department pie chart          | P0       |

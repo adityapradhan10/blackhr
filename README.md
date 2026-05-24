@@ -46,7 +46,7 @@ Built as a **pnpm + Turborepo monorepo** with a NestJS API, React frontend, and 
 | Frontend         | React 19, Vite, Tailwind CSS, Tremor, React Query, React Hook Form, Zod |
 | Backend          | NestJS 11, class-validator, Swagger                                     |
 | Database         | SQLite (via Prisma 7 + better-sqlite3)                                  |
-| Shared contracts | `@blackhr/shared-types` (TypeScript types only)                         |
+| Shared contracts | `@blackhr/shared-types` (API types + shared domain constants)         |
 | Testing          | Jest (API), Vitest + Testing Library (web)                              |
 
 
@@ -72,10 +72,10 @@ blackhr/
 │           ├── modules/
 │           │   ├── employees/       # views, controllers, hooks, models
 │           │   └── dashboard/
-│           ├── shared/              # API client, UI primitives, providers
+│           ├── shared/              # API client, UI primitives, providers, UI-only option wrappers
 │           └── routes/
 ├── packages/
-│   ├── shared-types/                # API contract types (FE + BE)
+│   ├── shared-types/                # API contract + workforce constants (FE + BE)
 │   ├── eslint-config/
 │   ├── prettier-config/
 │   └── ts-config/
@@ -281,7 +281,7 @@ The `Employee` model lives in `apps/api/prisma/schema.prisma`:
 | -------------------------------------------- | ------------------------------------------- |
 | `apps/api/prisma/seed/seed.ts`               | Orchestrates delete + batched insert        |
 | `apps/api/prisma/seed/employee-generator.ts` | Builds deterministic employee rows          |
-| `apps/api/prisma/seed/constants.ts`          | Count (10,000), batch size (1,000), domains |
+| `apps/api/prisma/seed/constants.ts`          | Seed tuning (batch size, salary ranges); domain lists from shared-types |
 | `apps/api/assets/first_names.txt`            | Name source for generation                  |
 | `apps/api/assets/last_names.txt`             | Name source for generation                  |
 
@@ -386,12 +386,21 @@ Views are intentionally dumb. Controllers own page-level state (search debounce,
 
 ### Shared contracts
 
-`packages/shared-types/src/index.ts` defines the API contract both apps share:
+`@blackhr/shared-types` is the single source of truth for cross-app contracts and reference data:
 
-- `Employee`, `EmployeeQuery`, `CreateEmployeeRequest`
-- `PaginatedResponse<T>`, `DashboardMetrics`, insight types
+| Module | Path | Contents |
+|---|---|---|
+| API shapes | `packages/shared-types/src/index.ts` | `Employee`, `EmployeeQuery`, `CreateEmployeeRequest`, `PaginatedResponse<T>`, `DashboardMetrics`, insight types |
+| Workforce options | `packages/shared-types/src/index.ts` | `COUNTRY_OPTIONS`, `DEPARTMENT_OPTIONS`, `JOB_TITLE_OPTIONS`, `EMPLOYMENT_TYPES` |
+| Query options | `packages/shared-types/src/index.ts` | `EMPLOYEE_SORT_BY_FIELDS`, `EMPLOYEE_SORT_ORDERS` |
 
-**Why types only, not DTOs?** Backend DTOs carry Nest decorators (`@IsEmail`, `@ApiProperty`) that the frontend should not depend on. Frontend form validation uses Zod separately (`apps/web/src/modules/employees/types/index.ts`).
+Both apps import via `"@blackhr/shared-types": "workspace:^"`. The package exports runtime values (not types-only) so dropdowns, seed data, and DTO validation stay aligned.
+
+**Web UI wrappers** — `apps/web/src/shared/constants/workforce-options.ts` re-exports shared workforce constants and adds UI-only helpers (`FILTER_*` empty “All” option, `FORM_*` aliases). Do not duplicate domain lists in the web app.
+
+**Seed-only config** — `apps/api/prisma/seed/constants.ts` imports domain lists from shared-types and keeps seed-specific maps (`SALARY_RANGES`, `JOB_TITLE_DEPARTMENTS`, batch sizes).
+
+**Why not share Nest DTOs with the frontend?** Backend DTOs carry Nest decorators (`@IsEmail`, `@ApiProperty`) that the frontend should not depend on. Frontend form validation uses Zod separately (`apps/web/src/modules/employees/types/index.ts`), deriving enums from shared constants where possible.
 
 **Why not share Prisma models?** Prisma types are backend-generated, use `Date` objects, and leak persistence concerns. The HTTP contract uses ISO date strings.
 

@@ -52,6 +52,7 @@ views/          → controllers/, shared/components/
 controllers/    → hooks/, types/ (Zod)
 hooks/          → models/
 models/         → shared/services/api.ts, @blackhr/shared-types
+shared/constants/workforce-options.ts → @blackhr/shared-types (re-export + UI wrappers)
 ```
 
 **Forbidden:**
@@ -81,6 +82,7 @@ Global infrastructure:
 
 - `shared/providers/QueryProvider.tsx` — 30s stale time, retry: 1
 - `shared/services/api.ts` — axios instance with base URL
+- `shared/constants/workforce-options.ts` — re-exports `@blackhr/shared-types` workforce constants; adds `FILTER_*` / `FORM_*` UI wrappers
 - `routes/index.tsx` — `/dashboard`, `/employees`
 
 ---
@@ -138,7 +140,14 @@ The controller stabilizes `query` with `useMemo` so the key doesn't change on ev
 
 ## Form validation
 
-Frontend uses **Zod + React Hook Form** (`types/index.ts`). Backend uses **class-validator DTOs**. Both align with `@blackhr/shared-types` at compile time, but runtime validation is duplicated intentionally — frontend cannot run Nest decorators.
+Frontend uses **Zod + React Hook Form** (`types/index.ts`). Backend uses **class-validator DTOs**. Both align with `@blackhr/shared-types` at compile time.
+
+Runtime validation is still duplicated by design — the frontend cannot run Nest decorators — but **enum values are not duplicated**:
+
+- `employmentType` → `z.enum(EMPLOYMENT_TYPES)` from shared-types
+- Sort columns on the API → `EMPLOYEE_SORT_BY_FIELDS` / `EMPLOYEE_SORT_ORDERS` in shared-types
+
+Workforce dropdown options (`COUNTRY_OPTIONS`, `DEPARTMENT_OPTIONS`, `JOB_TITLE_OPTIONS`) are imported from shared-types; only UI filter wrappers (`FILTER_*` with an empty “All” value) stay in the web app.
 
 ---
 

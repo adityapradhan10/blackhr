@@ -147,7 +147,9 @@ export class CreateEmployeeDto implements CreateEmployeeRequest {
 
 **Defense in depth:** DTO catches malformed HTTP; service validates even if called internally later. Tradeoff: some rules exist in both places (e.g. `salary > 0`).
 
-Query DTOs (`EmployeeQueryDto`) coerce string query params to numbers and validate enum sort columns before the repository sees them.
+Query DTOs (`EmployeeQueryDto`) coerce string query params to numbers and validate sort columns/orders using `EMPLOYEE_SORT_BY_FIELDS` and `EMPLOYEE_SORT_ORDERS` from `@blackhr/shared-types` before the repository sees them.
+
+Workforce reference data (countries, departments, job titles) is **not** duplicated in DTOs — it is exported from `packages/shared-types/src/index.ts` and consumed by the web UI and seed generator. The API accepts free-form strings for those fields on create/update today; the UI restricts choices via shared constants.
 
 ---
 

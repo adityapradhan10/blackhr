@@ -109,7 +109,7 @@ Deliberate decisions made for a 10,000-employee HR salary system. Each choice op
 | SQL aggregations for insights | No 10k-row transfer to Node | SQLite-specific raw SQL |
 | Repository port + Symbol DI | Fast unit tests | Extra abstraction for single Prisma impl |
 | MVC frontend layers | Testable views and controllers | More files per feature |
-| Shared-types (types only) | Compile-time FE/BE alignment | Zod + class-validator duplication |
+| Shared-types (types + domain constants) | Single source for API shapes and dropdown/sort enums | Zod + class-validator still separate at runtime |
 | 6 parallel dashboard queries | Parallel I/O on single machine | N+1 at API design level for country chart |
 | No optimistic updates | Simpler mutation flow | User waits for refetch after create |
 
@@ -121,6 +121,7 @@ Deliberate decisions made for a 10,000-employee HR salary system. Each choice op
 |---|---|
 | Microservices | Assessment-scale modular monolith is sufficient; ops overhead not justified |
 | Share backend DTOs with frontend | Pulls Nest/class-validator into web bundle |
+| Duplicate workforce constants per app | Caused dashboard 404s when UI job titles diverged from seed data |
 | Share Prisma models with frontend | Leaks ORM; wrong date types |
 | MSW for frontend tests | Axios adapter mock is simpler; tests real axios + React Query |
 | Snapshot-heavy UI tests | Brittle on CSS/copy; low signal for business logic |

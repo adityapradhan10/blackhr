@@ -44,13 +44,9 @@ apps/api/prisma/seed/seed.ts
 
 `constants.ts`:
 
-- Employee count
-- Batch size
-- Countries
-- Departments
-- Job titles
-- Employment type values
-- Salary ranges
+- Employee count, batch size, faker seed
+- Imports domain lists from `@blackhr/shared-types` (`COUNTRY_OPTIONS`, `DEPARTMENT_OPTIONS`, `JOB_TITLE_OPTIONS`, `EMPLOYMENT_TYPES`)
+- Seed-only maps: salary ranges, job title → department
 
 ## Employee Generation
 
@@ -73,19 +69,21 @@ Generate:
 
 ## Data Rules
 
-Countries:
+Domain lists (countries, departments, job titles, employment types) are defined once in `packages/shared-types/src/index.ts` and imported by the seed. Do not duplicate them in `constants.ts`.
+
+Countries (from shared-types):
 
 ```ts
 ['India', 'United States', 'Germany', 'Canada', 'United Kingdom', 'Australia']
 ```
 
-Departments:
+Departments (from shared-types):
 
 ```ts
 ['Engineering', 'Product', 'HR', 'Finance', 'Sales']
 ```
 
-Job titles:
+Job titles (from shared-types):
 
 ```ts
 [
