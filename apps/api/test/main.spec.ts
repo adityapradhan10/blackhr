@@ -12,6 +12,15 @@ jest.mock('@nestjs/core', () => ({
 }));
 
 jest.mock('@nestjs/swagger', () => ({
+  ApiBody: jest.fn(() => jest.fn()),
+  ApiConflictResponse: jest.fn(() => jest.fn()),
+  ApiCreatedResponse: jest.fn(() => jest.fn()),
+  ApiNotFoundResponse: jest.fn(() => jest.fn()),
+  ApiOkResponse: jest.fn(() => jest.fn()),
+  ApiProperty: jest.fn(() => jest.fn()),
+  ApiPropertyOptional: jest.fn(() => jest.fn()),
+  ApiQuery: jest.fn(() => jest.fn()),
+  ApiTags: jest.fn(() => jest.fn()),
   DocumentBuilder: jest.fn().mockImplementation(() => ({
     build: jest.fn().mockReturnValue({ title: 'BlackHR API' }),
     setDescription: jest.fn().mockReturnThis(),
@@ -22,6 +31,7 @@ jest.mock('@nestjs/swagger', () => ({
     createDocument: jest.fn().mockReturnValue({ openapi: '3.0.0' }),
     setup: jest.fn(),
   },
+  PartialType: jest.fn((BaseClass) => class extends BaseClass {}),
 }));
 
 describe('bootstrap', () => {

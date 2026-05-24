@@ -1,0 +1,445 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/v1/employees": {
+      "post": {
+        "operationId": "EmployeesController_createEmployee",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEmployeeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Employee created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Employee email already exists"
+          }
+        },
+        "tags": [
+          "employees"
+        ]
+      },
+      "get": {
+        "operationId": "EmployeesController_findAll",
+        "parameters": [
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "jobTitle",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "department",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated employees returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedEmployeesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "employees"
+        ]
+      }
+    },
+    "/api/v1/employees/{id}": {
+      "get": {
+        "operationId": "EmployeesController_findById",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Employee returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Employee not found"
+          }
+        },
+        "tags": [
+          "employees"
+        ]
+      },
+      "patch": {
+        "operationId": "EmployeesController_updateEmployee",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmployeeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employee updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Employee not found"
+          }
+        },
+        "tags": [
+          "employees"
+        ]
+      },
+      "delete": {
+        "operationId": "EmployeesController_deleteEmployee",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Employee deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Employee not found"
+          }
+        },
+        "tags": [
+          "employees"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "BlackHR API",
+    "description": "Backend API for BlackHR",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateEmployeeDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "example": "Aarav Sharma"
+          },
+          "email": {
+            "type": "string",
+            "example": "aarav.sharma@blackhr.example"
+          },
+          "salary": {
+            "type": "number",
+            "example": 120000,
+            "minimum": 1
+          },
+          "country": {
+            "type": "string",
+            "example": "India"
+          },
+          "jobTitle": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "joiningDate": {
+            "type": "string",
+            "example": "2024-01-15T00:00:00.000Z",
+            "format": "date-time"
+          },
+          "department": {
+            "type": "string",
+            "example": "Engineering"
+          },
+          "employmentType": {
+            "type": "string",
+            "example": "FULL_TIME"
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD"
+          }
+        },
+        "required": [
+          "fullName",
+          "email",
+          "salary",
+          "country",
+          "jobTitle",
+          "joiningDate"
+        ]
+      },
+      "EmployeeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "employee-1"
+          },
+          "employeeId": {
+            "type": "string",
+            "example": "BHR-00001"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "Aarav Sharma"
+          },
+          "email": {
+            "type": "string",
+            "example": "aarav.sharma@blackhr.example"
+          },
+          "jobTitle": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "department": {
+            "type": "string",
+            "example": "Engineering"
+          },
+          "country": {
+            "type": "string",
+            "example": "India"
+          },
+          "salary": {
+            "type": "number",
+            "example": 120000
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "employmentType": {
+            "type": "string",
+            "example": "FULL_TIME"
+          },
+          "joiningDate": {
+            "type": "string",
+            "example": "2024-01-15T00:00:00.000Z",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-01-16T00:00:00.000Z",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-01-16T00:00:00.000Z",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "employeeId",
+          "fullName",
+          "email",
+          "jobTitle",
+          "department",
+          "country",
+          "salary",
+          "currency",
+          "employmentType",
+          "joiningDate",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PaginationMetaDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "example": 20
+          },
+          "total": {
+            "type": "number",
+            "example": 10000
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 500
+          }
+        },
+        "required": [
+          "page",
+          "limit",
+          "total",
+          "totalPages"
+        ]
+      },
+      "PaginatedEmployeesResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmployeeResponseDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "UpdateEmployeeDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "example": "Aarav Sharma"
+          },
+          "email": {
+            "type": "string",
+            "example": "aarav.sharma@blackhr.example"
+          },
+          "salary": {
+            "type": "number",
+            "example": 120000,
+            "minimum": 1
+          },
+          "country": {
+            "type": "string",
+            "example": "India"
+          },
+          "jobTitle": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "joiningDate": {
+            "type": "string",
+            "example": "2024-01-15T00:00:00.000Z",
+            "format": "date-time"
+          },
+          "department": {
+            "type": "string",
+            "example": "Engineering"
+          },
+          "employmentType": {
+            "type": "string",
+            "example": "FULL_TIME"
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD"
+          }
+        }
+      }
+    }
+  }
+}

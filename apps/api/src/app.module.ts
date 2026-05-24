@@ -4,6 +4,7 @@ import { HealthController } from './common/health.controller';
 import configuration from './config/configuration';
 import { validateEnvironment } from './config/env.schema';
 import { PrismaModule } from './database/prisma.module';
+import { EmployeesModule } from './modules/employees/employees.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { PrismaModule } from './database/prisma.module';
       load: [configuration],
       validate: validateEnvironment,
     }),
+    EmployeesModule,
     PrismaModule,
   ],
   controllers: [HealthController],
