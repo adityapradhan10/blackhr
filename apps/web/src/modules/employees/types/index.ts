@@ -1,4 +1,4 @@
-import type { EmploymentType } from '@blackhr/shared-types';
+import { EMPLOYMENT_TYPES, type EmploymentType } from '@blackhr/shared-types';
 import { z } from 'zod/v4';
 import {
   FILTER_COUNTRY_OPTIONS,
@@ -30,17 +30,22 @@ export const EMPTY_EMPLOYEE_FILTERS: EmployeeFilters = {
   jobTitle: '',
 };
 
-export const EMPLOYMENT_TYPE_OPTIONS: Array<{ label: string; value: EmploymentType }> = [
-  { label: 'Full Time', value: 'FULL_TIME' },
-  { label: 'Part Time', value: 'PART_TIME' },
-  { label: 'Contract', value: 'CONTRACT' },
-];
+export const EMPLOYMENT_TYPE_LABELS: Record<EmploymentType, string> = {
+  CONTRACT: 'Contract',
+  FULL_TIME: 'Full Time',
+  PART_TIME: 'Part Time',
+};
+
+export const EMPLOYMENT_TYPE_OPTIONS = EMPLOYMENT_TYPES.map((value) => ({
+  label: EMPLOYMENT_TYPE_LABELS[value],
+  value,
+}));
 
 export const employeeFormSchema = z.object({
   country: z.string().trim().min(1, 'Country is required'),
   department: z.string().trim().min(1, 'Department is required'),
   email: z.string().trim().email('Enter a valid email address'),
-  employmentType: z.enum(['FULL_TIME', 'PART_TIME', 'CONTRACT']),
+  employmentType: z.enum(EMPLOYMENT_TYPES),
   fullName: z.string().trim().min(1, 'Full name is required'),
   jobTitle: z.string().trim().min(1, 'Job title is required'),
   joiningDate: z.string().trim().min(1, 'Joining date is required'),

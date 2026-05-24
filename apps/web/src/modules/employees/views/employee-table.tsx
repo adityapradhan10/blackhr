@@ -3,6 +3,7 @@ import { Badge, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRo
 import { PanelCard } from '../../../shared/ui/panel-card';
 import { LoadingMessage } from '../../../shared/ui/loading-message';
 import { formatCurrency } from '../../../shared/utils/formatters';
+import { EMPLOYMENT_TYPE_LABELS } from '../types';
 
 type EmployeeTableProps = {
   employees: EmployeeResponse[];
@@ -12,12 +13,6 @@ type EmployeeTableProps = {
   onSort?: (column: EmployeeSortBy) => void;
   sortBy?: EmployeeSortBy;
   sortOrder?: 'asc' | 'desc';
-};
-
-const EMPLOYMENT_TYPE_LABELS: Record<EmployeeResponse['employmentType'], string> = {
-  CONTRACT: 'Contract',
-  FULL_TIME: 'Full Time',
-  PART_TIME: 'Part Time',
 };
 
 function SortIcon({ active, order }: { active: boolean; order?: 'asc' | 'desc' }) {

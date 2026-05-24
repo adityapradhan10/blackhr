@@ -1,27 +1,10 @@
-export const COUNTRY_OPTIONS = [
-  'India',
-  'United States',
-  'United Kingdom',
-  'Germany',
-  'Canada',
-] as const;
+import {
+  COUNTRY_OPTIONS,
+  DEPARTMENT_OPTIONS,
+  JOB_TITLE_OPTIONS,
+} from '@blackhr/shared-types';
 
-export const DEPARTMENT_OPTIONS = [
-  'Engineering',
-  'Product',
-  'Design',
-  'Sales',
-  'HR',
-  'Finance',
-] as const;
-
-export const JOB_TITLE_OPTIONS = [
-  'Software Engineer',
-  'Product Manager',
-  'Designer',
-  'Sales Executive',
-  'HR Manager',
-] as const;
+export { COUNTRY_OPTIONS, DEPARTMENT_OPTIONS, JOB_TITLE_OPTIONS };
 
 export const FILTER_COUNTRY_OPTIONS = ['', ...COUNTRY_OPTIONS] as const;
 export const FILTER_DEPARTMENT_OPTIONS = ['', ...DEPARTMENT_OPTIONS] as const;
