@@ -83,10 +83,13 @@ export type SalaryDistributionBucket = {
   count: number;
 };
 
+export type DepartmentDistributionBucket = SalaryDistributionBucket;
+
 export type DashboardMetrics = {
   totalEmployees: number;
   highestPayingCountry: string | null;
   highestPayingRole: string | null;
   medianSalary: number | null;
   salaryDistribution: SalaryDistributionBucket[];
+  departmentDistribution: DepartmentDistributionBucket[];
 };
