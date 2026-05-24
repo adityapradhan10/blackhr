@@ -1,8 +1,48 @@
-export type EmployeeSortBy = 'fullName' | 'salary' | 'country' | 'jobTitle' | 'createdAt' | 'joiningDate';
+export const EMPLOYEE_SORT_BY_FIELDS = [
+  'fullName',
+  'salary',
+  'country',
+  'jobTitle',
+  'createdAt',
+  'joiningDate',
+] as const;
 
-export type EmployeeSortOrder = 'asc' | 'desc';
+export const EMPLOYEE_SORT_ORDERS = ['asc', 'desc'] as const;
 
-export type EmploymentType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT';
+export type EmployeeSortBy = (typeof EMPLOYEE_SORT_BY_FIELDS)[number];
+export type EmployeeSortOrder = (typeof EMPLOYEE_SORT_ORDERS)[number];
+
+export const COUNTRY_OPTIONS = [
+  'India',
+  'United States',
+  'Germany',
+  'Canada',
+  'United Kingdom',
+  'Australia',
+] as const;
+
+export const DEPARTMENT_OPTIONS = [
+  'Engineering',
+  'Product',
+  'HR',
+  'Finance',
+  'Sales',
+] as const;
+
+export const JOB_TITLE_OPTIONS = [
+  'Software Engineer',
+  'Senior Software Engineer',
+  'Product Manager',
+  'HR Specialist',
+  'Finance Analyst',
+] as const;
+
+export const EMPLOYMENT_TYPES = ['FULL_TIME', 'PART_TIME', 'CONTRACT'] as const;
+
+export type Country = (typeof COUNTRY_OPTIONS)[number];
+export type Department = (typeof DEPARTMENT_OPTIONS)[number];
+export type JobTitle = (typeof JOB_TITLE_OPTIONS)[number];
+export type EmploymentType = (typeof EMPLOYMENT_TYPES)[number];
 
 export type Employee = {
   id: string;
