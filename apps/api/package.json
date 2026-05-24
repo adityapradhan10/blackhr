@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
+    "start:prod": "node dist/main.js",
     "lint": "eslint . && tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.spec.json && tsc --noEmit --project tsconfig.eslint.json",
     "prisma": "prisma",
     "swagger:generate": "tsx src/generate-swagger.ts ../../docs/openapi.json",

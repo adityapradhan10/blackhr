@@ -1,0 +1,33 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "${PORT:-3001}:3001"
+    environment:
+      PORT: 3001
+      NODE_ENV: production
+      DATABASE_URL: file:./data/database.db
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - blackhr
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3001/api/v1}
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      - api
+    networks:
+      - blackhr
+
+networks:
+  blackhr:
+    driver: bridge
