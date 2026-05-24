@@ -5,9 +5,10 @@ import {
   COUNTRIES,
   EMPLOYMENT_TYPES,
   FAKER_SEED,
+  getSalaryProfile,
   JOB_TITLES,
   JOB_TITLE_DEPARTMENTS,
-  SALARY_RANGES,
+  type SalaryProfile,
 } from './constants';
 
 const FIRST_NAMES_PATH = resolve(process.cwd(), 'assets/first_names.txt');
@@ -31,19 +32,21 @@ export class EmployeeGenerator {
     const firstName = this.firstNames[index % this.firstNames.length];
     const lastName = this.lastNames[Math.floor(index / this.firstNames.length) % this.lastNames.length];
     const jobTitle = JOB_TITLES[index % JOB_TITLES.length];
-    const salaryRange = SALARY_RANGES[jobTitle];
+    const country = COUNTRIES[index % COUNTRIES.length];
+    const department = JOB_TITLE_DEPARTMENTS[jobTitle];
+    const salaryProfile = getSalaryProfile(jobTitle, country);
 
     return {
-      country: COUNTRIES[index % COUNTRIES.length],
+      country,
       currency: 'USD',
-      department: JOB_TITLE_DEPARTMENTS[jobTitle],
+      department,
       email: this.buildEmail(firstName, lastName, employeeNumber),
       employeeId: `BHR-${employeeNumber.toString().padStart(5, '0')}`,
       employmentType: EMPLOYMENT_TYPES[index % EMPLOYMENT_TYPES.length],
       fullName: `${firstName} ${lastName}`,
       jobTitle,
       joiningDate: this.generateJoiningDate(index),
-      salary: this.generateSalary(index, salaryRange.min, salaryRange.max),
+      salary: this.generateSalary(index, salaryProfile),
     };
   }
 
@@ -68,8 +71,25 @@ export class EmployeeGenerator {
     return `${localPart}@blackhr.example`;
   }
 
-  private generateSalary(index: number, min: number, max: number): number {
-    return min + (this.seededInt(index, max - min + 1) % (max - min + 1));
+  private generateSalary(index: number, profile: SalaryProfile): number {
+    const raw = this.seededNormal(index, profile.mean, profile.stdDev);
+    const clamped = Math.min(profile.max, Math.max(profile.min, raw));
+
+    return Math.round(clamped / 500) * 500;
+  }
+
+  private seededNormal(index: number, mean: number, stdDev: number): number {
+    const u1 = this.seededUniform(index, 0);
+    const u2 = this.seededUniform(index, 1);
+    const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+
+    return mean + z0 * stdDev;
+  }
+
+  private seededUniform(index: number, stream: number): number {
+    const value = this.seededInt(index * 31 + stream * 17 + 7, 1_000_000);
+
+    return (value + 1) / 1_000_001;
   }
 
   private generateJoiningDate(index: number): Date {
