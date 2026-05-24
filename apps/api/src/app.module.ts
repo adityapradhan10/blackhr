@@ -5,6 +5,7 @@ import configuration from './config/configuration';
 import { validateEnvironment } from './config/env.schema';
 import { PrismaModule } from './database/prisma.module';
 import { EmployeesModule } from './modules/employees/employees.module';
+import { SalaryInsightsModule } from './modules/salary-insights/salary-insights.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { EmployeesModule } from './modules/employees/employees.module';
     }),
     EmployeesModule,
     PrismaModule,
+    SalaryInsightsModule,
   ],
   controllers: [HealthController],
 })

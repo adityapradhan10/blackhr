@@ -13,10 +13,12 @@ jest.mock('@nestjs/core', () => ({
 
 jest.mock('@nestjs/swagger', () => ({
   ApiBody: jest.fn(() => jest.fn()),
+  ApiBadRequestResponse: jest.fn(() => jest.fn()),
   ApiConflictResponse: jest.fn(() => jest.fn()),
   ApiCreatedResponse: jest.fn(() => jest.fn()),
   ApiNotFoundResponse: jest.fn(() => jest.fn()),
   ApiOkResponse: jest.fn(() => jest.fn()),
+  ApiParam: jest.fn(() => jest.fn()),
   ApiProperty: jest.fn(() => jest.fn()),
   ApiPropertyOptional: jest.fn(() => jest.fn()),
   ApiQuery: jest.fn(() => jest.fn()),

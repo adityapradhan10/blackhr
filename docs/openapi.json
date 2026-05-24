@@ -214,6 +214,107 @@
           "employees"
         ]
       }
+    },
+    "/api/v1/salary-insights/country/{country}": {
+      "get": {
+        "operationId": "SalaryInsightsController_countryInsights",
+        "parameters": [
+          {
+            "name": "country",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country salary insights returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountrySalaryInsightsResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Country data not found"
+          }
+        },
+        "tags": [
+          "salary-insights"
+        ]
+      }
+    },
+    "/api/v1/salary-insights/job-title": {
+      "get": {
+        "operationId": "SalaryInsightsController_jobTitleInsights",
+        "parameters": [
+          {
+            "name": "jobTitle",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job title salary insights returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobTitleSalaryInsightsResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Salary data not found"
+          }
+        },
+        "tags": [
+          "salary-insights"
+        ]
+      }
+    },
+    "/api/v1/salary-insights/dashboard": {
+      "get": {
+        "operationId": "SalaryInsightsController_dashboardMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Dashboard salary metrics returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardSalaryInsightsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "salary-insights"
+        ]
+      }
     }
   },
   "info": {
@@ -439,6 +540,109 @@
             "example": "USD"
           }
         }
+      },
+      "CountrySalaryInsightsResponseDto": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "example": "India"
+          },
+          "minSalary": {
+            "type": "number",
+            "example": 50000
+          },
+          "maxSalary": {
+            "type": "number",
+            "example": 200000
+          },
+          "averageSalary": {
+            "type": "number",
+            "example": 95000
+          }
+        },
+        "required": [
+          "country",
+          "minSalary",
+          "maxSalary",
+          "averageSalary"
+        ]
+      },
+      "JobTitleSalaryInsightsResponseDto": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "example": "India"
+          },
+          "jobTitle": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "averageSalary": {
+            "type": "number",
+            "example": 120000
+          }
+        },
+        "required": [
+          "country",
+          "jobTitle",
+          "averageSalary"
+        ]
+      },
+      "SalaryDistributionBucketDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "50000-99999"
+          },
+          "count": {
+            "type": "number",
+            "example": 2500
+          }
+        },
+        "required": [
+          "label",
+          "count"
+        ]
+      },
+      "DashboardSalaryInsightsResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalEmployees": {
+            "type": "number",
+            "example": 10000
+          },
+          "highestPayingCountry": {
+            "type": "string",
+            "example": "United States",
+            "nullable": true
+          },
+          "highestPayingRole": {
+            "type": "string",
+            "example": "Senior Software Engineer",
+            "nullable": true
+          },
+          "medianSalary": {
+            "type": "number",
+            "example": 85000,
+            "nullable": true
+          },
+          "salaryDistribution": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalaryDistributionBucketDto"
+            }
+          }
+        },
+        "required": [
+          "totalEmployees",
+          "highestPayingCountry",
+          "highestPayingRole",
+          "medianSalary",
+          "salaryDistribution"
+        ]
       }
     }
   }
