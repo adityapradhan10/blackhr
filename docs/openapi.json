@@ -634,6 +634,12 @@
             "items": {
               "$ref": "#/components/schemas/SalaryDistributionBucketDto"
             }
+          },
+          "departmentDistribution": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalaryDistributionBucketDto"
+            }
           }
         },
         "required": [
@@ -641,7 +647,8 @@
           "highestPayingCountry",
           "highestPayingRole",
           "medianSalary",
-          "salaryDistribution"
+          "salaryDistribution",
+          "departmentDistribution"
         ]
       }
     }
