@@ -9,6 +9,10 @@ vi.mock('react-dom/client', () => ({
   createRoot: reactDomClientMock.createRoot,
 }));
 
+vi.mock('../src/App', () => ({
+  App: () => null,
+}));
+
 describe('main entrypoint', () => {
   beforeEach(() => {
     vi.resetModules();
