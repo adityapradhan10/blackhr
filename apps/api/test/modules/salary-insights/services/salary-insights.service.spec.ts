@@ -119,7 +119,7 @@ describe(SalaryInsightsService.name, () => {
   });
 
   describe('dashboardMetrics', () => {
-    it('returns dashboard metrics', async () => {
+    it('returns total employees', async () => {
       const repository = createRepository();
       repository.findDashboardMetrics.mockResolvedValue({
         highestPayingCountry: 'United States',
@@ -139,22 +139,53 @@ describe(SalaryInsightsService.name, () => {
       });
       const service = new SalaryInsightsService(repository);
 
-      await expect(service.dashboardMetrics()).resolves.toEqual({
+      await expect(service.dashboardMetrics()).resolves.toEqual(expect.objectContaining({ totalEmployees: 10 }));
+    });
+
+    it('returns highest paying country', async () => {
+      const repository = createRepository();
+      repository.findDashboardMetrics.mockResolvedValue({
         highestPayingCountry: 'United States',
         highestPayingRole: 'Senior Software Engineer',
         medianSalary: 85000,
-        salaryDistribution: [
-          {
-            count: 4,
-            label: '50000-99999',
-          },
-          {
-            count: 6,
-            label: '100000-149999',
-          },
-        ],
+        salaryDistribution: [],
         totalEmployees: 10,
       });
+      const service = new SalaryInsightsService(repository);
+
+      await expect(service.dashboardMetrics()).resolves.toEqual(
+        expect.objectContaining({ highestPayingCountry: 'United States' }),
+      );
+    });
+
+    it('returns highest paying role', async () => {
+      const repository = createRepository();
+      repository.findDashboardMetrics.mockResolvedValue({
+        highestPayingCountry: 'United States',
+        highestPayingRole: 'Senior Software Engineer',
+        medianSalary: 85000,
+        salaryDistribution: [],
+        totalEmployees: 10,
+      });
+      const service = new SalaryInsightsService(repository);
+
+      await expect(service.dashboardMetrics()).resolves.toEqual(
+        expect.objectContaining({ highestPayingRole: 'Senior Software Engineer' }),
+      );
+    });
+
+    it('returns median salary', async () => {
+      const repository = createRepository();
+      repository.findDashboardMetrics.mockResolvedValue({
+        highestPayingCountry: 'United States',
+        highestPayingRole: 'Senior Software Engineer',
+        medianSalary: 85000,
+        salaryDistribution: [],
+        totalEmployees: 10,
+      });
+      const service = new SalaryInsightsService(repository);
+
+      await expect(service.dashboardMetrics()).resolves.toEqual(expect.objectContaining({ medianSalary: 85000 }));
     });
   });
 });

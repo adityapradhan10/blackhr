@@ -1,4 +1,4 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { EmployeesService } from '../../../../src/modules/employees/services/employees.service';
 import type { CreateEmployeeDto } from '../../../../src/modules/employees/dto/create-employee.dto';
 import type { UpdateEmployeeDto } from '../../../../src/modules/employees/dto/update-employee.dto';
@@ -81,6 +81,26 @@ describe(EmployeesService.name, () => {
       await expect(service.createEmployee(buildCreateDto())).rejects.toBeInstanceOf(ConflictException);
       expect(repository.create).not.toHaveBeenCalled();
     });
+
+    it('rejects invalid salary', async () => {
+      const repository = createRepository();
+      const service = new EmployeesService(repository);
+
+      await expect(service.createEmployee(buildCreateDto({ salary: 0 }))).rejects.toBeInstanceOf(BadRequestException);
+      expect(repository.findByEmail).not.toHaveBeenCalled();
+      expect(repository.create).not.toHaveBeenCalled();
+    });
+
+    it('rejects invalid input', async () => {
+      const repository = createRepository();
+      const service = new EmployeesService(repository);
+
+      await expect(service.createEmployee(buildCreateDto({ fullName: '   ' }))).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
+      expect(repository.findByEmail).not.toHaveBeenCalled();
+      expect(repository.create).not.toHaveBeenCalled();
+    });
   });
 
   describe('findAll', () => {
@@ -123,7 +143,33 @@ describe(EmployeesService.name, () => {
       expect(repository.count).toHaveBeenCalledWith(expect.objectContaining({ country: 'Germany' }));
     });
 
-    it('searches by name', async () => {
+    it('filters by department', async () => {
+      const repository = createRepository();
+      const employees = [buildEmployee({ department: 'Finance', id: 'employee-4' })];
+      repository.findMany.mockResolvedValue(employees);
+      repository.count.mockResolvedValue(1);
+      const service = new EmployeesService(repository);
+
+      await expect(service.findAll({ department: 'Finance' })).resolves.toEqual(expect.objectContaining({ data: employees }));
+      expect(repository.findMany).toHaveBeenCalledWith(expect.objectContaining({ department: 'Finance' }));
+      expect(repository.count).toHaveBeenCalledWith(expect.objectContaining({ department: 'Finance' }));
+    });
+
+    it('filters by jobTitle', async () => {
+      const repository = createRepository();
+      const employees = [buildEmployee({ id: 'employee-5', jobTitle: 'Finance Analyst' })];
+      repository.findMany.mockResolvedValue(employees);
+      repository.count.mockResolvedValue(1);
+      const service = new EmployeesService(repository);
+
+      await expect(service.findAll({ jobTitle: 'Finance Analyst' })).resolves.toEqual(
+        expect.objectContaining({ data: employees }),
+      );
+      expect(repository.findMany).toHaveBeenCalledWith(expect.objectContaining({ jobTitle: 'Finance Analyst' }));
+      expect(repository.count).toHaveBeenCalledWith(expect.objectContaining({ jobTitle: 'Finance Analyst' }));
+    });
+
+    it('searches by fullName', async () => {
       const repository = createRepository();
       const employees = [buildEmployee({ fullName: 'Aditi Sharma', id: 'employee-3' })];
       repository.findMany.mockResolvedValue(employees);
@@ -133,6 +179,40 @@ describe(EmployeesService.name, () => {
       await expect(service.findAll({ search: 'aditi' })).resolves.toEqual(expect.objectContaining({ data: employees }));
       expect(repository.findMany).toHaveBeenCalledWith(expect.objectContaining({ search: 'aditi' }));
       expect(repository.count).toHaveBeenCalledWith(expect.objectContaining({ search: 'aditi' }));
+    });
+
+    it('searches by email', async () => {
+      const repository = createRepository();
+      const employees = [buildEmployee({ email: 'aditi.sharma@blackhr.example', id: 'employee-6' })];
+      repository.findMany.mockResolvedValue(employees);
+      repository.count.mockResolvedValue(1);
+      const service = new EmployeesService(repository);
+
+      await expect(service.findAll({ search: 'aditi.sharma@blackhr.example' })).resolves.toEqual(
+        expect.objectContaining({ data: employees }),
+      );
+      expect(repository.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ search: 'aditi.sharma@blackhr.example' }),
+      );
+      expect(repository.count).toHaveBeenCalledWith(expect.objectContaining({ search: 'aditi.sharma@blackhr.example' }));
+    });
+
+    it('respects limit maximum', async () => {
+      const repository = createRepository();
+      repository.findMany.mockResolvedValue([]);
+      repository.count.mockResolvedValue(0);
+      const service = new EmployeesService(repository);
+
+      await expect(service.findAll({ limit: 500, page: 2 })).resolves.toEqual({
+        data: [],
+        meta: {
+          limit: 100,
+          page: 2,
+          total: 0,
+          totalPages: 0,
+        },
+      });
+      expect(repository.findMany).toHaveBeenCalledWith(expect.objectContaining({ limit: 100, skip: 100 }));
     });
   });
 
@@ -174,6 +254,15 @@ describe(EmployeesService.name, () => {
       const service = new EmployeesService(repository);
 
       await expect(service.updateEmployee('missing', { salary: 130000 })).rejects.toBeInstanceOf(NotFoundException);
+      expect(repository.update).not.toHaveBeenCalled();
+    });
+
+    it('rejects invalid updates', async () => {
+      const repository = createRepository();
+      repository.findById.mockResolvedValue(buildEmployee());
+      const service = new EmployeesService(repository);
+
+      await expect(service.updateEmployee('employee-1', { salary: -1 })).rejects.toBeInstanceOf(BadRequestException);
       expect(repository.update).not.toHaveBeenCalled();
     });
   });

@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { CreateEmployeeDto } from '../dto/create-employee.dto';
 import type { EmployeeQueryDto } from '../dto/employee-query.dto';
@@ -29,6 +29,8 @@ export class EmployeesService {
   ) {}
 
   async createEmployee(dto: CreateEmployeeDto): Promise<EmployeeRecord> {
+    this.validateCreateDto(dto);
+
     const existingEmployee = await this.employeesRepository.findByEmail(dto.email);
 
     if (existingEmployee) {
@@ -41,6 +43,11 @@ export class EmployeesService {
   async findAll(query: EmployeeQueryDto): Promise<PaginatedEmployees> {
     const page = query.page ?? 1;
     const limit = Math.min(query.limit ?? 20, 100);
+
+    if (page < 1 || limit < 1) {
+      throw new BadRequestException('Invalid request');
+    }
+
     const filters: EmployeeFilters = {
       ...query,
       limit,
@@ -74,6 +81,7 @@ export class EmployeesService {
   }
 
   async updateEmployee(id: string, dto: UpdateEmployeeDto): Promise<EmployeeRecord> {
+    this.validateUpdateDto(dto);
     await this.findById(id);
 
     return this.employeesRepository.update(id, dto);
@@ -98,5 +106,37 @@ export class EmployeesService {
       joiningDate: dto.joiningDate,
       salary: dto.salary,
     };
+  }
+
+  private validateCreateDto(dto: CreateEmployeeDto): void {
+    if (
+      !this.hasText(dto.fullName) ||
+      !this.hasText(dto.email) ||
+      !this.hasText(dto.country) ||
+      !this.hasText(dto.jobTitle) ||
+      !(dto.joiningDate instanceof Date) ||
+      Number.isNaN(dto.joiningDate.getTime()) ||
+      dto.salary <= 0
+    ) {
+      throw new BadRequestException('Invalid request');
+    }
+  }
+
+  private validateUpdateDto(dto: UpdateEmployeeDto): void {
+    if (
+      (dto.fullName !== undefined && !this.hasText(dto.fullName)) ||
+      (dto.email !== undefined && !this.hasText(dto.email)) ||
+      (dto.country !== undefined && !this.hasText(dto.country)) ||
+      (dto.jobTitle !== undefined && !this.hasText(dto.jobTitle)) ||
+      (dto.joiningDate !== undefined &&
+        (!(dto.joiningDate instanceof Date) || Number.isNaN(dto.joiningDate.getTime()))) ||
+      (dto.salary !== undefined && dto.salary <= 0)
+    ) {
+      throw new BadRequestException('Invalid request');
+    }
+  }
+
+  private hasText(value: unknown): value is string {
+    return typeof value === 'string' && value.trim().length > 0;
   }
 }

@@ -100,9 +100,7 @@ export class EmployeesRepository implements EmployeesRepositoryPort {
       ...(filters.jobTitle ? { jobTitle: filters.jobTitle } : {}),
       ...(filters.search
         ? {
-            fullName: {
-              contains: filters.search,
-            },
+            OR: [{ fullName: { contains: filters.search } }, { email: { contains: filters.search } }],
           }
         : {}),
     };
