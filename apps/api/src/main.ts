@@ -19,6 +19,10 @@ export async function bootstrap(port?: number) {
   setupSwagger(app);
 
   const configService = app.get(ConfigService<AppConfiguration, true>);
+  app.enableCors({
+    origin: configService.get('corsOrigins', { infer: true }),
+  });
+
   await app.listen(port ?? configService.get('port', { infer: true }));
 }
 

@@ -60,7 +60,7 @@ export class SalaryInsightsRepository implements SalaryInsightsRepositoryPort {
 
     return {
       averageSalary: result._avg.salary,
-      count: result._count._all,
+      count: this.toNumber(result._count._all),
       maxSalary: result._max.salary,
       minSalary: result._min.salary,
     };
@@ -78,17 +78,19 @@ export class SalaryInsightsRepository implements SalaryInsightsRepositoryPort {
 
     return {
       averageSalary: result._avg.salary,
-      count: result._count._all,
+      count: this.toNumber(result._count._all),
     };
   }
 
   async findDashboardMetrics(): Promise<DashboardMetrics> {
-    const [totalEmployees, highestCountry, highestRole, medianSalary, salaryDistribution] = await Promise.all([
+    const [totalEmployees, highestCountry, highestRole, medianSalary, salaryDistribution, departmentDistribution] =
+      await Promise.all([
       this.prisma.employee.count(),
       this.findHighestPayingCountry(),
       this.findHighestPayingRole(),
       this.findMedianSalary(),
       this.findSalaryDistribution(),
+      this.findDepartmentDistribution(),
     ]);
 
     return {
@@ -96,6 +98,7 @@ export class SalaryInsightsRepository implements SalaryInsightsRepositoryPort {
       highestPayingRole: highestRole,
       medianSalary,
       salaryDistribution,
+      departmentDistribution,
       totalEmployees,
     };
   }
@@ -156,8 +159,25 @@ export class SalaryInsightsRepository implements SalaryInsightsRepositoryPort {
     `;
 
     return rows.map((row) => ({
-      count: Number(row.count),
-      label: this.buildBucketLabel(row.bucket),
+      count: this.toNumber(row.count),
+      label: this.buildBucketLabel(this.toNumber(row.bucket)),
+    }));
+  }
+
+  private async findDepartmentDistribution(): Promise<SalaryDistributionBucket[]> {
+    const rows = await this.prisma.employee.groupBy({
+      _count: { _all: true },
+      by: ['department'],
+      orderBy: {
+        _count: {
+          department: 'desc',
+        },
+      },
+    });
+
+    return rows.map((row) => ({
+      count: this.toNumber(row._count._all),
+      label: row.department,
     }));
   }
 
@@ -166,6 +186,10 @@ export class SalaryInsightsRepository implements SalaryInsightsRepositoryPort {
     const end = start + 49_999;
 
     return `${start}-${end}`;
+  }
+
+  private toNumber(value: number | bigint): number {
+    return Number(value);
   }
 
   private toNullableNumber(value: number | bigint | null | undefined): number | null {

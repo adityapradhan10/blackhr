@@ -41,12 +41,29 @@ describe('bootstrap', () => {
     jest.clearAllMocks();
   });
 
+  function createConfigGet(overrides: Partial<{ corsOrigins: string[]; port: number }> = {}) {
+    return jest.fn((key: string) => {
+      if (key === 'corsOrigins') {
+        return overrides.corsOrigins ?? ['http://localhost:5173'];
+      }
+
+      if (key === 'port') {
+        return overrides.port ?? 3001;
+      }
+
+      return undefined;
+    });
+  }
+
   it('starts the Nest app on the configured port', async () => {
-    const get = jest.fn().mockReturnValue({ get: jest.fn().mockReturnValue(3001) });
+    const configGet = createConfigGet();
+    const get = jest.fn().mockReturnValue({ get: configGet });
     const listen = jest.fn();
     const setGlobalPrefix = jest.fn();
     const useGlobalPipes = jest.fn();
+    const enableCors = jest.fn();
     jest.mocked(NestFactory.create).mockResolvedValue({
+      enableCors,
       get,
       listen,
       setGlobalPrefix,
@@ -58,6 +75,7 @@ describe('bootstrap', () => {
     expect(NestFactory.create).toHaveBeenCalledWith(AppModule);
     expect(setGlobalPrefix).toHaveBeenCalledWith('api/v1');
     expect(useGlobalPipes).toHaveBeenCalledWith(expect.any(ValidationPipe));
+    expect(enableCors).toHaveBeenCalledWith({ origin: ['http://localhost:5173'] });
     expect(SwaggerModule.createDocument).toHaveBeenCalled();
     expect(SwaggerModule.setup).toHaveBeenCalledWith('api/docs', expect.anything(), {
       openapi: '3.0.0',
@@ -66,13 +84,15 @@ describe('bootstrap', () => {
   });
 
   it('starts automatically when the current module is the entrypoint', async () => {
-    const configGet = jest.fn().mockReturnValue(3001);
+    const configGet = createConfigGet();
     const get = jest.fn().mockReturnValue({ get: configGet });
     const listen = jest.fn();
     const setGlobalPrefix = jest.fn();
     const useGlobalPipes = jest.fn();
+    const enableCors = jest.fn();
     const currentModule = {} as NodeJS.Module;
     jest.mocked(NestFactory.create).mockResolvedValue({
+      enableCors,
       get,
       listen,
       setGlobalPrefix,
@@ -84,7 +104,9 @@ describe('bootstrap', () => {
 
     expect(NestFactory.create).toHaveBeenCalledWith(AppModule);
     expect(get).toHaveBeenCalledWith(ConfigService);
+    expect(configGet).toHaveBeenCalledWith('corsOrigins', { infer: true });
     expect(configGet).toHaveBeenCalledWith('port', { infer: true });
+    expect(enableCors).toHaveBeenCalledWith({ origin: ['http://localhost:5173'] });
     expect(listen).toHaveBeenCalledWith(3001);
   });
 

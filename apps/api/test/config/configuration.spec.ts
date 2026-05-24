@@ -13,9 +13,16 @@ describe('configuration', () => {
 
   it('uses development defaults when environment variables are not set', () => {
     expect(configuration()).toEqual({
+      corsOrigins: ['http://localhost:5173'],
       databaseUrl: '',
       nodeEnv: 'development',
       port: 3001,
     });
+  });
+
+  it('parses comma-separated CORS origins', () => {
+    process.env.CORS_ORIGINS = 'http://localhost:5173,http://localhost:4173';
+
+    expect(configuration().corsOrigins).toEqual(['http://localhost:5173', 'http://localhost:4173']);
   });
 });

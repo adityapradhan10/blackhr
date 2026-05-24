@@ -19,6 +19,10 @@ class EnvironmentVariables {
 
   @IsIn(nodeEnvironments)
   NODE_ENV: NodeEnvironment = 'development';
+
+  @IsString()
+  @IsNotEmpty()
+  CORS_ORIGINS = 'http://localhost:5173';
 }
 
 export function validateEnvironment(config: Record<string, unknown>): EnvironmentVariables {
