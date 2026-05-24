@@ -13,6 +13,7 @@ export function EmployeesPage() {
   const formController = useEmployeeFormController({
     employee: controller.editingEmployee,
     onClose: controller.closeForm,
+    onError: controller.handleFormError,
     onSuccess: controller.handleFormSuccess,
   });
 
@@ -51,6 +52,7 @@ export function EmployeesPage() {
       />
 
       <EmployeeFormDialog
+        errorMessage={controller.formError}
         form={formController.form}
         isEditing={formController.isEditing}
         isOpen={controller.isFormOpen}

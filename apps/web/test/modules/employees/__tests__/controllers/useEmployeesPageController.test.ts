@@ -66,6 +66,30 @@ describe('useEmployeesPageController', () => {
     expect(result.current.deletingEmployee).toBeNull();
   });
 
+  it('clears success feedback when opening the create form', async () => {
+    mockEmployeeApi({});
+
+    const { result } = renderHookWithQueryClient(() => useEmployeesPageController());
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    act(() => {
+      result.current.handleFormSuccess('Employee created successfully.');
+    });
+
+    expect(result.current.feedbackMessage).toBe('Employee created successfully.');
+
+    act(() => {
+      result.current.openCreateForm();
+    });
+
+    expect(result.current.feedbackMessage).toBeNull();
+    expect(result.current.formError).toBeNull();
+    expect(result.current.isFormOpen).toBe(true);
+  });
+
   it('computes query filters, debounced search, and sort state', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const adapter = mockEmployeeApi({

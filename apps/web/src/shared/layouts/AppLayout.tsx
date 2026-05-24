@@ -10,15 +10,15 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
 
 export function AppLayout() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950">
-      <div className="flex min-h-screen">
-        <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200/80 bg-white">
-          <div className="border-b border-slate-100 px-6 py-5">
+    <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-950">
+      <div className="flex min-h-screen flex-col lg:flex-row">
+        <aside className="w-full shrink-0 border-b border-slate-200/80 bg-white lg:w-64 lg:border-r lg:border-b-0">
+          <div className="border-b border-slate-100 px-4 py-4 lg:px-6 lg:py-5">
             <p className="text-lg font-bold tracking-tight text-slate-900">BlackHR</p>
             <p className="mt-0.5 text-xs text-slate-500">Salary management</p>
           </div>
 
-          <nav aria-label="Main navigation" className="flex flex-col gap-1 p-4">
+          <nav aria-label="Main navigation" className="flex gap-1 p-3 lg:flex-col lg:p-4">
             <NavLink className={navLinkClassName} to="/dashboard">
               Dashboard
             </NavLink>
@@ -28,8 +28,8 @@ export function AppLayout() {
           </nav>
         </aside>
 
-        <main className="flex-1 overflow-auto">
-          <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+        <main className="min-w-0 flex-1 overflow-x-hidden">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <Outlet />
           </div>
         </main>

@@ -19,6 +19,7 @@ export function useEmployeesPageController() {
   const [editingEmployee, setEditingEmployee] = useState<EmployeeResponse | null>(null);
   const [deletingEmployee, setDeletingEmployee] = useState<EmployeeResponse | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const deleteEmployee = useDeleteEmployee();
 
@@ -83,16 +84,21 @@ export function useEmployeesPageController() {
 
   const openCreateForm = () => {
     setEditingEmployee(null);
+    setFeedbackMessage(null);
+    setFormError(null);
     setIsFormOpen(true);
   };
 
   const openEditForm = (employee: EmployeeResponse) => {
     setEditingEmployee(employee);
+    setFeedbackMessage(null);
+    setFormError(null);
     setIsFormOpen(true);
   };
 
   const closeForm = () => {
     setEditingEmployee(null);
+    setFormError(null);
     setIsFormOpen(false);
   };
 
@@ -120,6 +126,10 @@ export function useEmployeesPageController() {
     setFeedbackMessage(message);
   };
 
+  const handleFormError = (message: string) => {
+    setFormError(message);
+  };
+
   return {
     closeDeleteDialog,
     closeForm,
@@ -130,6 +140,8 @@ export function useEmployeesPageController() {
     error: employeesQuery.error,
     feedbackMessage,
     filters,
+    formError,
+    handleFormError,
     handleFormSuccess,
     handleSort,
     isDeleting: deleteEmployee.isPending,

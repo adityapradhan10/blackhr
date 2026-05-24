@@ -103,7 +103,8 @@ export function EmployeeTable({
 
   return (
     <PanelCard>
-      <Table>
+      <div className="-mx-6 overflow-x-auto px-6">
+        <Table>
         <TableHead>
           <TableRow>
             <TableHeaderCell>Employee ID</TableHeaderCell>
@@ -156,6 +157,7 @@ export function EmployeeTable({
           ))}
         </TableBody>
       </Table>
+      </div>
     </PanelCard>
   );
 }

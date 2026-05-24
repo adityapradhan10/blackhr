@@ -8,8 +8,8 @@ type PageHeaderProps = {
 
 export function PageHeader({ actions, description, title }: PageHeaderProps) {
   return (
-    <header className={`mb-8 ${actions ? 'flex items-start justify-between gap-4' : ''}`}>
-      <div>
+    <header className={`mb-8 gap-4 ${actions ? 'flex flex-col sm:flex-row sm:items-start sm:justify-between' : ''}`}>
+      <div className="min-w-0">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
         {description ? <p className="mt-1 text-sm text-slate-500">{description}</p> : null}
       </div>

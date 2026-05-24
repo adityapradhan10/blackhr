@@ -2,6 +2,7 @@ import type { EmployeeResponse } from '@blackhr/shared-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { getApiErrorMessage } from '../../../shared/utils/api-errors';
 import { useCreateEmployee } from '../hooks/useCreateEmployee';
 import { useUpdateEmployee } from '../hooks/useUpdateEmployee';
 import { employeeFormSchema, type EmployeeFormValues } from '../types';
@@ -9,6 +10,7 @@ import { employeeFormSchema, type EmployeeFormValues } from '../types';
 type UseEmployeeFormControllerOptions = {
   employee?: EmployeeResponse | null;
   onClose: () => void;
+  onError: (message: string) => void;
   onSuccess: (message: string) => void;
 };
 
@@ -38,7 +40,7 @@ function toFormValues(employee?: EmployeeResponse | null): EmployeeFormValues {
   };
 }
 
-export function useEmployeeFormController({ employee, onClose, onSuccess }: UseEmployeeFormControllerOptions) {
+export function useEmployeeFormController({ employee, onClose, onError, onSuccess }: UseEmployeeFormControllerOptions) {
   const createEmployee = useCreateEmployee();
   const updateEmployee = useUpdateEmployee();
   const isEditing = Boolean(employee);
@@ -53,18 +55,22 @@ export function useEmployeeFormController({ employee, onClose, onSuccess }: UseE
   }, [employee, form]);
 
   const submit = form.handleSubmit(async (values) => {
-    if (isEditing && employee) {
-      await updateEmployee.mutateAsync({
-        id: employee.id,
-        input: values,
-      });
-      onSuccess('Employee updated successfully.');
-    } else {
-      await createEmployee.mutateAsync(values);
-      onSuccess('Employee created successfully.');
-    }
+    try {
+      if (isEditing && employee) {
+        await updateEmployee.mutateAsync({
+          id: employee.id,
+          input: values,
+        });
+        onSuccess('Employee updated successfully.');
+      } else {
+        await createEmployee.mutateAsync(values);
+        onSuccess('Employee created successfully.');
+      }
 
-    onClose();
+      onClose();
+    } catch (error) {
+      onError(getApiErrorMessage(error, 'Unable to save employee. Please try again.'));
+    }
   });
 
   return {

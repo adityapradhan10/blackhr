@@ -36,7 +36,7 @@ export function EmployeeForm({ form, isEditing, isSubmitting, onCancel, onSubmit
 
   return (
     <form
-      className="grid gap-4 md:grid-cols-2"
+      className="grid gap-4 sm:grid-cols-2"
       data-testid="employee-form"
       onSubmit={(event) => {
         event.preventDefault();
@@ -207,7 +207,7 @@ export function EmployeeForm({ form, isEditing, isSubmitting, onCancel, onSubmit
         <FieldError message={errors.joiningDate?.message} />
       </div>
 
-      <div className="col-span-full flex justify-end gap-2 border-t border-slate-100 pt-4">
+      <div className="col-span-full flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end">
         <Button disabled={isSubmitting} onClick={onCancel} type="button" variant="secondary">
           Cancel
         </Button>
