@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
+import type { EmployeeSortBy, EmployeeSortOrder } from '@blackhr/shared-types';
 import { PrismaService } from '../../../database/prisma.service';
-import type { EmployeeSortBy, EmployeeSortOrder } from '../dto/employee-query.dto';
 
 export const EMPLOYEES_REPOSITORY = Symbol('EMPLOYEES_REPOSITORY');
 

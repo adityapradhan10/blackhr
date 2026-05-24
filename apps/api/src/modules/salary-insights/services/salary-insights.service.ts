@@ -1,23 +1,14 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import type { CountrySalaryInsight, DashboardMetrics, JobTitleSalaryInsight } from '@blackhr/shared-types';
 import type { SalaryJobTitleQueryDto } from '../dto/salary-country-query.dto';
 import {
   SALARY_INSIGHTS_REPOSITORY,
-  type DashboardMetrics,
   type SalaryInsightsRepositoryPort,
 } from '../repositories/salary-insights.repository';
 
-export type CountryInsights = {
-  country: string;
-  minSalary: number;
-  maxSalary: number;
-  averageSalary: number;
-};
+export type CountryInsights = CountrySalaryInsight;
 
-export type JobTitleInsights = {
-  country: string;
-  jobTitle: string;
-  averageSalary: number;
-};
+export type JobTitleInsights = JobTitleSalaryInsight;
 
 @Injectable()
 export class SalaryInsightsService {

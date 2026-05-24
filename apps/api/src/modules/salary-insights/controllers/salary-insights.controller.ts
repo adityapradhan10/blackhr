@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import type { DashboardMetrics } from '@blackhr/shared-types';
 import { SalaryJobTitleQueryDto } from '../dto/salary-country-query.dto';
 import {
   CountrySalaryInsightsResponseDto,
@@ -7,7 +8,6 @@ import {
   JobTitleSalaryInsightsResponseDto,
 } from '../dto/salary-insights-response.dto';
 import { SalaryInsightsService, type CountryInsights, type JobTitleInsights } from '../services/salary-insights.service';
-import type { DashboardMetrics } from '../repositories/salary-insights.repository';
 
 @ApiTags('salary-insights')
 @Controller('salary-insights')

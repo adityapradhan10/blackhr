@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import type { EmployeeListResponse, EmployeeResponse, EmploymentType, PaginationMeta } from '@blackhr/shared-types';
 
-export class EmployeeResponseDto {
+export class EmployeeResponseDto implements EmployeeResponse {
   @ApiProperty({ example: 'employee-1', type: String })
   id!: string;
 
@@ -29,7 +30,7 @@ export class EmployeeResponseDto {
   currency!: string;
 
   @ApiProperty({ example: 'FULL_TIME', type: String })
-  employmentType!: string;
+  employmentType!: EmploymentType;
 
   @ApiProperty({ example: '2024-01-15T00:00:00.000Z', format: 'date-time', type: String })
   joiningDate!: string;
@@ -41,7 +42,7 @@ export class EmployeeResponseDto {
   updatedAt!: string;
 }
 
-class PaginationMetaDto {
+class PaginationMetaDto implements PaginationMeta {
   @ApiProperty({ example: 1, type: Number })
   page!: number;
 
@@ -55,7 +56,7 @@ class PaginationMetaDto {
   totalPages!: number;
 }
 
-export class PaginatedEmployeesResponseDto {
+export class PaginatedEmployeesResponseDto implements EmployeeListResponse {
   @ApiProperty({ isArray: true, type: EmployeeResponseDto })
   data!: EmployeeResponseDto[];
 

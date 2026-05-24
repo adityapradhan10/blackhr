@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import type { DashboardMetrics, SalaryDistributionBucket } from '@blackhr/shared-types';
 import { PrismaService } from '../../../database/prisma.service';
 
 export const SALARY_INSIGHTS_REPOSITORY = Symbol('SALARY_INSIGHTS_REPOSITORY');
@@ -13,19 +14,6 @@ export type CountrySalaryMetrics = {
 export type JobTitleSalaryMetrics = {
   count: number;
   averageSalary: number | null;
-};
-
-export type SalaryDistributionBucket = {
-  label: string;
-  count: number;
-};
-
-export type DashboardMetrics = {
-  totalEmployees: number;
-  highestPayingCountry: string | null;
-  highestPayingRole: string | null;
-  medianSalary: number | null;
-  salaryDistribution: SalaryDistributionBucket[];
 };
 
 export type SalaryInsightsRepositoryPort = {

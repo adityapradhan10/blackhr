@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+import type {
+  CountrySalaryInsight,
+  DashboardMetrics,
+  JobTitleSalaryInsight,
+  SalaryDistributionBucket,
+} from '@blackhr/shared-types';
 
-export class CountrySalaryInsightsResponseDto {
+export class CountrySalaryInsightsResponseDto implements CountrySalaryInsight {
   @ApiProperty({ example: 'India', type: String })
   country!: string;
 
@@ -14,7 +20,7 @@ export class CountrySalaryInsightsResponseDto {
   averageSalary!: number;
 }
 
-export class JobTitleSalaryInsightsResponseDto {
+export class JobTitleSalaryInsightsResponseDto implements JobTitleSalaryInsight {
   @ApiProperty({ example: 'India', type: String })
   country!: string;
 
@@ -25,7 +31,7 @@ export class JobTitleSalaryInsightsResponseDto {
   averageSalary!: number;
 }
 
-class SalaryDistributionBucketDto {
+class SalaryDistributionBucketDto implements SalaryDistributionBucket {
   @ApiProperty({ example: '50000-99999', type: String })
   label!: string;
 
@@ -33,7 +39,7 @@ class SalaryDistributionBucketDto {
   count!: number;
 }
 
-export class DashboardSalaryInsightsResponseDto {
+export class DashboardSalaryInsightsResponseDto implements DashboardMetrics {
   @ApiProperty({ example: 10000, type: Number })
   totalEmployees!: number;
 

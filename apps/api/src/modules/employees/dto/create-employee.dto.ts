@@ -1,8 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import type { CreateEmployeeRequest, EmploymentType } from '@blackhr/shared-types';
 import { Type } from 'class-transformer';
 import { IsDate, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
-export class CreateEmployeeDto {
+export class CreateEmployeeDto implements CreateEmployeeRequest {
   @ApiProperty({ example: 'Aarav Sharma', type: String })
   @IsNotEmpty()
   @IsString()
@@ -40,7 +41,7 @@ export class CreateEmployeeDto {
   @ApiPropertyOptional({ example: 'FULL_TIME', type: String })
   @IsOptional()
   @IsString()
-  employmentType?: string;
+  employmentType?: EmploymentType;
 
   @ApiPropertyOptional({ example: 'USD', type: String })
   @IsOptional()

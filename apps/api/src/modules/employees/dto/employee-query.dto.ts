@@ -1,14 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import type { EmployeeQuery, EmployeeSortBy, EmployeeSortOrder } from '@blackhr/shared-types';
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 const SORTABLE_FIELDS = ['fullName', 'salary', 'country', 'jobTitle', 'createdAt', 'joiningDate'] as const;
 const SORT_ORDERS = ['asc', 'desc'] as const;
 
-export type EmployeeSortBy = (typeof SORTABLE_FIELDS)[number];
-export type EmployeeSortOrder = (typeof SORT_ORDERS)[number];
-
-export class EmployeeQueryDto {
+export class EmployeeQueryDto implements EmployeeQuery {
   @ApiPropertyOptional({ default: 1, minimum: 1, type: Number })
   @IsOptional()
   @IsInt()
