@@ -70,11 +70,40 @@ describe('useDashboardPageController', () => {
     });
 
     act(() => {
+      result.current.setSelectedJobTitleCountry('India');
       result.current.setSelectedJobTitle('Product Manager');
     });
 
     await waitFor(() => {
       expect(result.current.jobTitleInsight?.averageSalary).toBe(105000);
+    });
+  });
+
+  it('keeps country selections independent between insight panels', async () => {
+    mockSalaryInsightApi({});
+
+    const { result } = renderHookWithQueryClient(() => useDashboardPageController());
+
+    await waitFor(() => {
+      expect(result.current.countryInsight).toEqual(indiaCountryInsight);
+    });
+
+    act(() => {
+      result.current.setSelectedCountry('United States');
+    });
+
+    await waitFor(() => {
+      expect(result.current.selectedCountry).toBe('United States');
+      expect(result.current.selectedJobTitleCountry).toBe('India');
+    });
+
+    act(() => {
+      result.current.setSelectedJobTitleCountry('United States');
+    });
+
+    await waitFor(() => {
+      expect(result.current.selectedCountry).toBe('United States');
+      expect(result.current.selectedJobTitleCountry).toBe('United States');
     });
   });
 

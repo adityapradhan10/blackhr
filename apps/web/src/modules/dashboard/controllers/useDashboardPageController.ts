@@ -8,11 +8,12 @@ import { formatCount, formatCurrency, formatLabel } from '../../../shared/utils/
 
 export function useDashboardPageController() {
   const [selectedCountry, setSelectedCountry] = useState<string>(COUNTRY_OPTIONS[0]);
+  const [selectedJobTitleCountry, setSelectedJobTitleCountry] = useState<string>(COUNTRY_OPTIONS[0]);
   const [selectedJobTitle, setSelectedJobTitle] = useState<string>(JOB_TITLE_OPTIONS[0]);
 
   const dashboardQuery = useDashboardMetrics();
   const countryInsightQuery = useCountryInsights(selectedCountry);
-  const jobTitleInsightQuery = useJobTitleInsights(selectedCountry, selectedJobTitle);
+  const jobTitleInsightQuery = useJobTitleInsights(selectedJobTitleCountry, selectedJobTitle);
   const countryComparisonQueries = useCountryComparisonInsights(COUNTRY_OPTIONS);
 
   const countryChartData = useMemo(
@@ -63,8 +64,10 @@ export function useDashboardPageController() {
     salaryDistribution: dashboardData?.salaryDistribution ?? [],
     selectedCountry,
     selectedJobTitle,
+    selectedJobTitleCountry,
     setSelectedCountry,
     setSelectedJobTitle,
+    setSelectedJobTitleCountry,
   };
 }
 

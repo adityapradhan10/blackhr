@@ -30,9 +30,9 @@ function DashboardContent({ controller }: { controller: DashboardPageController 
           isError={controller.isJobTitleInsightError}
           isLoading={controller.isJobTitleInsightLoading}
           jobTitleOptions={controller.jobTitleOptions}
-          onCountryChange={controller.setSelectedCountry}
+          onCountryChange={controller.setSelectedJobTitleCountry}
           onJobTitleChange={controller.setSelectedJobTitle}
-          selectedCountry={controller.selectedCountry}
+          selectedCountry={controller.selectedJobTitleCountry}
           selectedJobTitle={controller.selectedJobTitle}
         />
       </div>

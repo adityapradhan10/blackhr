@@ -147,7 +147,9 @@ describe('DashboardPage', () => {
       within(screen.getByText('Highest Paying Country').closest('div')!.parentElement!).getByText('United States'),
     ).toBeInTheDocument();
     expect(await screen.findByText('Highest Paying Role')).toBeInTheDocument();
-    expect(await screen.findByText('Senior Software Engineer')).toBeInTheDocument();
+    expect(
+      within(screen.getByText('Highest Paying Role').closest('div')!.parentElement!).getByText('Senior Software Engineer'),
+    ).toBeInTheDocument();
     expect(await screen.findByText('Median Salary')).toBeInTheDocument();
     expect(await screen.findByText('$85,000')).toBeInTheDocument();
   });
