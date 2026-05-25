@@ -36,6 +36,8 @@ Registered in `apps/api/prisma.config.ts`:
 pnpm -F @blackhr/api exec prisma db seed
 ```
 
+**Production Docker:** seed TypeScript is compiled to `prisma/seed/dist/` during the image build. `docker-entrypoint.sh` runs `scripts/ensure-seeded.cjs` after migrations — if the employee table is empty, it executes `node prisma/seed/dist/seed.js`. This avoids needing Render Shell on the free tier.
+
 ---
 
 ## createMany batching

@@ -12,8 +12,10 @@ Deliberate decisions made for a 10,000-employee HR salary system. Each choice op
 
 - Zero database hosting for local dev and Docker deployment
 - Sufficient for 10k employee records and assessment-scale analytics
-- Single file persistence — mount a volume in Docker/Railway and done
+- Single file persistence — mount a volume in Docker Compose or paid hosting
 - Faster onboarding: no Postgres container, no connection string management
+
+**Render free tier:** no persistent disk — SQLite is ephemeral per container. The API auto-seeds on startup when empty, so demos work without Shell access.
 
 **Tradeoffs:**
 

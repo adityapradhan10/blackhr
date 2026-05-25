@@ -132,6 +132,8 @@ NODE_ENV=development
 CORS_ORIGINS=http://localhost:5173
 ```
 
+`CORS_ORIGINS` accepts comma-separated origins. Trailing slashes are stripped. Wildcards such as `https://*.vercel.app` are supported for Vercel preview deploys.
+
 ### 3. Run database migrations
 
 ```bash
@@ -204,11 +206,13 @@ CORS_ORIGINS=http://localhost:8080
 VITE_API_URL=http://localhost:3001/api/v1
 ```
 
-The API container runs `prisma migrate deploy` on startup (`docker-entrypoint.sh`), then starts the Nest app. Database file: `./data/database.db`.
+The API container runs `prisma migrate deploy`, seeds the database when empty (`scripts/ensure-seeded.cjs`), then starts the Nest app. Database file: `./data/database.db`.
 
 ### Seed in Docker
 
-After containers are up, seed from the host (requires local pnpm install):
+Docker Compose auto-seeds on first startup when the employee table is empty (same as the production Docker image).
+
+To re-seed manually from the host (requires local pnpm install):
 
 ```bash
 DATABASE_URL="file:./data/database.db" pnpm -F @blackhr/api exec prisma db seed
@@ -217,7 +221,7 @@ DATABASE_URL="file:./data/database.db" pnpm -F @blackhr/api exec prisma db seed
 Or exec into the API container:
 
 ```bash
-docker compose exec api npx prisma db seed
+docker compose exec api node prisma/seed/dist/seed.js
 ```
 
 ### Verify health
@@ -512,25 +516,76 @@ See [docs/performance/seed-strategy.md](docs/performance/seed-strategy.md) and `
 
 ## Deployment
 
-Suggested targets (configure in your hosting provider):
+Suggested targets:
 
 | Component | Target | Notes |
 | --- | --- | --- |
-| Frontend | [Vercel](https://vercel.com) | Static build from `apps/web`; set `VITE_API_URL` to production API |
-| Backend | [Railway](https://railway.app) or [Render](https://render.com) | Docker image from `apps/api/Dockerfile` |
-| Database | Mounted volume | SQLite file at `./data/database.db` — persist across deploys |
+| Frontend | [Vercel](https://vercel.com) | Static build from `apps/web`; set `VITE_API_URL` at build time |
+| Backend | [Render](https://render.com) or [Railway](https://railway.app) | Docker image from `apps/api/Dockerfile` |
+| Database | SQLite in container | Ephemeral on Render free tier; auto-seeds on empty DB at startup |
 
-**Live URLs (placeholder — update after deploy):**
+### Render (backend)
 
-- Frontend: `https://blackhr-web.vercel.app` _(pending)_
-- API: `https://blackhr-api.railway.app/api/v1` _(pending)_
+Create a **Web Service** with:
 
-Production checklist:
+| Setting | Value |
+| --- | --- |
+| Language | Docker |
+| Docker build context | `.` (repo root) |
+| Dockerfile path | `apps/api/Dockerfile` |
+| Health check path | `/api/v1/health` |
+
+**Environment variables:**
+
+```env
+NODE_ENV=production
+DATABASE_URL=file:./data/database.db
+CORS_ORIGINS=https://*.vercel.app
+```
+
+Notes:
+
+- Do **not** set `PORT` — Render injects it automatically.
+- `CORS_ORIGINS` is comma-separated. Trailing slashes are stripped automatically.
+- Use `https://*.vercel.app` so Vercel preview deploys work without updating CORS on every build.
+- For a single stable origin, use the exact frontend URL with **no trailing slash** and **no path** (e.g. `https://blackhr.vercel.app`, not `.../dashboard`).
+- Render **Shell** and **persistent disks** require a paid plan. The Docker entrypoint auto-seeds when the database is empty so the free tier works without manual seeding.
+
+### Vercel (frontend)
+
+Set in the Vercel project **Environment Variables** (Production and Preview):
+
+```env
+VITE_API_URL=https://<your-render-service>.onrender.com/api/v1
+```
+
+Redeploy after changing `VITE_API_URL` — Vite bakes it at build time.
+
+Monorepo settings are in `apps/web/vercel.json` (install/build commands, SPA rewrites).
+
+### CORS troubleshooting
+
+The browser sends an `Origin` header **without** path or trailing slash:
+
+```http
+Origin: https://blackhr-cayod06d8-aditya-pradhans-projects.vercel.app
+```
+
+That value must match an entry in `CORS_ORIGINS`. Preview URLs change per Vercel deploy (`blackhr-<hash>-...vercel.app`), which is why `https://*.vercel.app` is recommended.
+
+If API requests fail with empty response headers in DevTools, check:
+
+1. `CORS_ORIGINS` on Render matches the frontend origin (or uses a wildcard)
+2. Render service was **redeployed** after env changes
+3. Vercel `VITE_API_URL` points at the Render API URL
+
+### Production checklist
 
 ```bash
 pnpm build                              # verify local build
 docker compose up --build               # verify containerized run
-curl https://<api-host>/api/v1/health   # verify health endpoint
+curl https://<api-host>/api/v1/health   # {"status":"ok"}
+curl "https://<api-host>/api/v1/employees?limit=1"  # verify seed data
 ```
 
 ---
@@ -546,7 +601,7 @@ Suggested content: seed run → employee CRUD → filter/search → dashboard me
 ## Known limitations
 
 - No authentication or authorization
-- SQLite instead of PostgreSQL
+- SQLite instead of PostgreSQL — ephemeral on Render free tier (auto-reseeds on empty DB)
 - No rate limiting, audit logging, or observability
 - Dashboard cache is not invalidated when employees are created/deleted (stale for up to 30s)
 - Search uses SQL `contains`, not full-text search

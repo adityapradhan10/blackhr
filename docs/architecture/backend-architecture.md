@@ -57,6 +57,29 @@ DTOs run **before** the controller method body executes. Malformed requests fail
 
 ---
 
+## Configuration and CORS
+
+Environment variables are validated in `apps/api/src/config/env.schema.ts` and mapped in `configuration.ts`.
+
+| Variable | Purpose |
+|---|---|
+| `PORT` | HTTP listen port (injected by Render in production) |
+| `DATABASE_URL` | SQLite file URL (`file:./data/database.db`) |
+| `NODE_ENV` | `development` \| `test` \| `production` |
+| `CORS_ORIGINS` | Comma-separated allowed browser origins |
+
+CORS is applied in `main.ts` via `createCorsOriginDelegate()` (`apps/api/src/config/cors.ts`):
+
+- Exact origin match (e.g. `http://localhost:5173`)
+- Trailing slashes stripped when parsing `CORS_ORIGINS`
+- Wildcard patterns (e.g. `https://*.vercel.app`) for Vercel preview deploys
+
+The browser `Origin` header never includes paths — only scheme, host, and port. Do not put `/dashboard` in `CORS_ORIGINS`.
+
+Docker startup (`docker-entrypoint.sh`): `prisma migrate deploy` → seed if employee count is 0 → `node dist/main.js`.
+
+---
+
 ## Repository pattern
 
 Services depend on an **interface port**, not Prisma:

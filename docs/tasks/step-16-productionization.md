@@ -52,6 +52,8 @@ Requirements:
 
 ✓ startup command works with SQLite
 
+✓ auto-seeds empty database on container start (compiled seed in image)
+
 Suggested flow:
 
 ```dockerfile
@@ -152,13 +154,19 @@ PORT=3001
 NODE_ENV=production
 
 DATABASE_URL=file:./data/database.db
+
+CORS_ORIGINS=http://localhost:5173,https://*.vercel.app
 ```
+
+`CORS_ORIGINS` is comma-separated. Trailing slashes are stripped. Wildcards (e.g. `https://*.vercel.app`) match Vercel preview deployment URLs.
 
 Frontend:
 
 ```env
 VITE_API_URL=http://localhost:3001/api/v1
 ```
+
+On Vercel, set `VITE_API_URL` to the production Render API URL and redeploy — Vite reads it at build time.
 
 ---
 
@@ -244,15 +252,20 @@ Expected:
 
 Frontend:
 
-Vercel
+Vercel — set `VITE_API_URL` to the Render API base path (`https://<service>.onrender.com/api/v1`).
 
 Backend:
 
-Railway or Render
+Render or Railway — deploy `apps/api/Dockerfile` with build context at repo root.
 
 SQLite:
 
-mounted persistent volume
+- **Docker Compose / paid hosting:** mount `./data:/app/data` for persistence across restarts.
+- **Render free tier:** no persistent disk or Shell — the entrypoint runs `prisma migrate deploy`, seeds when the employee table is empty, then starts the API. Data is ephemeral across redeploys; empty databases are re-seeded automatically.
+
+CORS:
+
+Set `CORS_ORIGINS` on the API to match frontend origins. Use `https://*.vercel.app` for Vercel preview URLs. Origins must not include paths (`/dashboard`) or trailing slashes.
 
 ---
 
