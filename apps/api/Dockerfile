@@ -23,6 +23,7 @@ COPY packages/ts-config packages/ts-config
 COPY apps/api apps/api
 
 ENV DATABASE_URL="file:./build.db"
+RUN pnpm --filter @blackhr/shared-types build
 WORKDIR /app/apps/api
 RUN pnpm exec prisma generate
 RUN pnpm build
