@@ -7,12 +7,16 @@ export type AppConfiguration = {
   corsOrigins: string[];
 };
 
+function parseCorsOrigins(value: string | undefined): string[] {
+  return (value ?? 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+}
+
 export default function configuration(): AppConfiguration {
   return {
-    corsOrigins: (process.env.CORS_ORIGINS ?? 'http://localhost:5173')
-      .split(',')
-      .map((origin) => origin.trim())
-      .filter(Boolean),
+    corsOrigins: parseCorsOrigins(process.env.CORS_ORIGINS),
     databaseUrl: process.env.DATABASE_URL ?? '',
     nodeEnv: (process.env.NODE_ENV ?? 'development') as NodeEnvironment,
     port: Number(process.env.PORT ?? 3001),

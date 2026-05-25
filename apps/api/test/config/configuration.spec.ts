@@ -25,4 +25,13 @@ describe('configuration', () => {
 
     expect(configuration().corsOrigins).toEqual(['http://localhost:5173', 'http://localhost:4173']);
   });
+
+  it('strips trailing slashes from CORS origins', () => {
+    process.env.CORS_ORIGINS = 'https://blackhr.vercel.app/,https://preview.vercel.app';
+
+    expect(configuration().corsOrigins).toEqual([
+      'https://blackhr.vercel.app',
+      'https://preview.vercel.app',
+    ]);
+  });
 });
