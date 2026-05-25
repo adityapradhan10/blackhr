@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import type { AppConfiguration } from './config/configuration';
+import { createCorsOriginDelegate } from './config/cors';
 import { setupSwagger } from './swagger';
 
 export async function bootstrap(port?: number) {
@@ -20,7 +21,7 @@ export async function bootstrap(port?: number) {
 
   const configService = app.get(ConfigService<AppConfiguration, true>);
   app.enableCors({
-    origin: configService.get('corsOrigins', { infer: true }),
+    origin: createCorsOriginDelegate(configService.get('corsOrigins', { infer: true })),
   });
 
   await app.listen(port ?? configService.get('port', { infer: true }));

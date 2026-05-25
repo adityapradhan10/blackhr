@@ -75,7 +75,9 @@ describe('bootstrap', () => {
     expect(NestFactory.create).toHaveBeenCalledWith(AppModule);
     expect(setGlobalPrefix).toHaveBeenCalledWith('api/v1');
     expect(useGlobalPipes).toHaveBeenCalledWith(expect.any(ValidationPipe));
-    expect(enableCors).toHaveBeenCalledWith({ origin: ['http://localhost:5173'] });
+    expect(enableCors).toHaveBeenCalledWith({
+      origin: expect.any(Function),
+    });
     expect(SwaggerModule.createDocument).toHaveBeenCalled();
     expect(SwaggerModule.setup).toHaveBeenCalledWith('api/docs', expect.anything(), {
       openapi: '3.0.0',
@@ -106,7 +108,9 @@ describe('bootstrap', () => {
     expect(get).toHaveBeenCalledWith(ConfigService);
     expect(configGet).toHaveBeenCalledWith('corsOrigins', { infer: true });
     expect(configGet).toHaveBeenCalledWith('port', { infer: true });
-    expect(enableCors).toHaveBeenCalledWith({ origin: ['http://localhost:5173'] });
+    expect(enableCors).toHaveBeenCalledWith({
+      origin: expect.any(Function),
+    });
     expect(listen).toHaveBeenCalledWith(3001);
   });
 
