@@ -8,12 +8,12 @@
     ".": {
       "types": "./dist/esm/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
+      "require": "./dist/cjs/index.cjs",
       "default": "./dist/esm/index.js"
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json && mv dist/cjs/index.js dist/cjs/index.cjs",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {
