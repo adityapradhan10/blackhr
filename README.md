@@ -590,11 +590,12 @@ curl "https://<api-host>/api/v1/employees?limit=1"  # verify seed data
 
 ---
 
-## Demo video
+## Resources
 
-**Demo walkthrough (placeholder):** [Add Loom/YouTube link here](https://example.com/blackhr-demo)
-
-Suggested content: seed run → employee CRUD → filter/search → dashboard metrics.
+**Deployed FE:** [Link here](https://blackhr-web.vercel.app)
+**Deployed BE:** [Link here](https://blackhr-api.onrender.com). NOTE: BE service warm-up takes time because of the free tier.
+**Release notes:** [Link here](https://github.com/adityapradhan10/blackhr/releases/tag/v1.1.0)
+**Demo:** [Link here](https://drive.google.com/file/d/125EeiMXHcCIZ9lJh6oSVzHGwhZpPkPV2/view?usp=sharing)
 
 ---
 
